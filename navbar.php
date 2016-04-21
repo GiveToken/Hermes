@@ -29,9 +29,6 @@
         <?php } else { ?>
             <li><a href="/create_recruiting" class="external sizzle-nav-choice">Create Token</a></li>
         <?php } ?>
-        <?php if (!logged_in()) { ?>
-          <li><a href="/pricing" class="external sizzle-nav-choice">Pricing</a></li>
-        <?php } ?>
         <li><a href="http://blog.gosizzle.io" class="external sizzle-nav-choice">Blog</a></li>
         <?php if (logged_in()) { ?>
             <li class="dropdown">
@@ -40,8 +37,6 @@
                 <li><a href="/pricing" class="external account-dropdown sizzle-nav-choice" id="upgrade-dropdown">Upgrade</a></li>
                 <li role="separator" class="divider" id="upgrade-divider"></li>
                 <li><a href="/tokens" class="external account-dropdown sizzle-nav-choice">My Tokens</a></li>
-                <li><a href="/profile" class="external account-dropdown sizzle-nav-choice">Profile</a></li>
-                <li><a href="/payments" class="external account-dropdown sizzle-nav-choice">Payments</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="javascript:void(0)" class="account-dropdown sizzle-nav-choice" id="logout-button" onclick="logout();">Logout</a></li>
               </ul>
@@ -51,7 +46,6 @@
             <?php }?>
         <?php } else { ?>
             <li><a href="javascript:void(0)" onclick="loginOpen()" class="sizzle-nav-choice">Login</a></li>
-            <li><a href="javascript:void(0)" onclick="signupOpen()" class="sizzle-nav-choice">Sign Up</a></li>
         <?php }?>
       </ul>
     </div>

@@ -18,9 +18,6 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode(''));
         $this->assertTrue($this->checkStatusCode('/'));
         $this->assertTrue($this->checkStatusCode('/index.html'));
-        $this->assertTrue($this->checkStatusCode('/about'));
-        $this->assertTrue($this->checkStatusCode('/attribution'));
-        $this->assertTrue($this->checkStatusCode('/activate', false, 302));
         $this->assertTrue($this->checkStatusCode('/admin', false, 302));
         $this->assertTrue($this->checkStatusCode('/admin/active_users', false, 302));
         $this->assertTrue($this->checkStatusCode('/admin/city', false, 302));
@@ -46,33 +43,18 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/'));
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here'));
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here/'));
-        $this->assertTrue($this->checkStatusCode('/careers'));
         $this->assertTrue($this->checkStatusCode('/create_company', false, 302));
         $this->assertTrue($this->checkStatusCode('/create_recruiting', false, 302));
         $this->assertTrue($this->checkStatusCode('/email_credentials', false, 302));
         $this->assertTrue($this->checkStatusCode('/email_list', false, 302));
-        $this->assertTrue($this->checkStatusCode('/email_signup'));
-        $this->assertTrue($this->checkStatusCode('/free_trial'));
-        $this->assertTrue($this->checkStatusCode('/forgot_password'));
-        $this->assertTrue($this->checkStatusCode('/iframe_code', false, 302));
         $this->assertTrue($this->checkStatusCode('/invoice', false, 302));
-        $this->assertTrue($this->checkStatusCode('/job_listing'));
         $this->assertTrue($this->checkStatusCode('/js', false, 301));
         $this->assertTrue($this->checkStatusCode('/js/', false, 404));
-        $this->assertTrue($this->checkStatusCode('/js/JSXTransformer.js'));
         $this->assertTrue($this->checkStatusCode('/mascot'));
         $this->assertTrue($this->checkStatusCode('/organization', false, 302));
-        $this->assertTrue($this->checkStatusCode('/password_reset', false, 302));
-        $this->assertTrue($this->checkStatusCode('/pricing'));
-        $this->assertTrue($this->checkStatusCode('/privacy'));
-        $this->assertTrue($this->checkStatusCode('/profile', false, 302));
-        $this->assertTrue($this->checkStatusCode('/recruiting_made_easy'));
         $this->assertTrue($this->checkStatusCode('/robots.txt'));
         $this->assertTrue($this->checkStatusCode('/send_recruiting', false, 302));
-        $this->assertTrue($this->checkStatusCode('/support'));
         $this->assertTrue($this->checkStatusCode('/teapot', false, 418));
-        $this->assertTrue($this->checkStatusCode('/terms'));
-        $this->assertTrue($this->checkStatusCode('/thankyou'));
         $this->assertTrue($this->checkStatusCode('/token', false, 404));
         $this->assertTrue($this->checkStatusCode('/token/', false, 404));
         $this->assertTrue($this->checkStatusCode('/token/recruiting', false, 404));
@@ -80,7 +62,6 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/token/recruiting/'.rand(), false, 200));
         $this->assertTrue($this->checkStatusCode('/tokens', false, 302));
         $this->assertTrue($this->checkStatusCode('/token_responses', false, 302));
-        $this->assertTrue($this->checkStatusCode('/track'));
         $this->assertTrue($this->checkStatusCode('/upload'));// should be under ajax?
         $this->assertTrue($this->checkStatusCode('/user', false, 302));
         $this->assertTrue($this->checkStatusCode('/test', false, 200));// only on DEVELOPMENT
@@ -94,9 +75,6 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('', true, 302));
         $this->assertTrue($this->checkStatusCode('/', true, 302));
         $this->assertTrue($this->checkStatusCode('/index.html', true, 302));
-        $this->assertTrue($this->checkStatusCode('/about', true));
-        $this->assertTrue($this->checkStatusCode('/attribution', true));
-        $this->assertTrue($this->checkStatusCode('/activate', true, 302));
         $this->assertTrue($this->checkStatusCode('/admin', true, 302));
         $this->assertTrue($this->checkStatusCode('/admin/active_users', true, 302));
         $this->assertTrue($this->checkStatusCode('/admin/city', true, 302));
@@ -122,33 +100,18 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/', true));
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here', true));
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here/', true));
-        $this->assertTrue($this->checkStatusCode('/careers', true));
         $this->assertTrue($this->checkStatusCode('/create_company', true));
         $this->assertTrue($this->checkStatusCode('/create_recruiting', true));
         $this->assertTrue($this->checkStatusCode('/email_credentials', true));
         $this->assertTrue($this->checkStatusCode('/email_list', true));
-        $this->assertTrue($this->checkStatusCode('/email_signup', true, 302));
-        $this->assertTrue($this->checkStatusCode('/free_trial', true));
-        $this->assertTrue($this->checkStatusCode('/forgot_password', true));
-        $this->assertTrue($this->checkStatusCode('/iframe_code', true));
         $this->assertTrue($this->checkStatusCode('/invoice', true));
-        $this->assertTrue($this->checkStatusCode('/job_listing', true));
         $this->assertTrue($this->checkStatusCode('/js', true, 301));
         $this->assertTrue($this->checkStatusCode('/js/', true, 404));
-        $this->assertTrue($this->checkStatusCode('/js/JSXTransformer.js', true));
         $this->assertTrue($this->checkStatusCode('/mascot', true));
         $this->assertTrue($this->checkStatusCode('/organization', true, 302));
-        $this->assertTrue($this->checkStatusCode('/password_reset', true, 302));
-        $this->assertTrue($this->checkStatusCode('/pricing', true));
-        $this->assertTrue($this->checkStatusCode('/privacy', true));
-        $this->assertTrue($this->checkStatusCode('/profile', true));
-        $this->assertTrue($this->checkStatusCode('/recruiting_made_easy', true));
         $this->assertTrue($this->checkStatusCode('/robots.txt', true));
         $this->assertTrue($this->checkStatusCode('/send_recruiting', true));
-        $this->assertTrue($this->checkStatusCode('/support', true));
         $this->assertTrue($this->checkStatusCode('/teapot', true, 418));
-        $this->assertTrue($this->checkStatusCode('/terms', true));
-        $this->assertTrue($this->checkStatusCode('/thankyou', true));
         $this->assertTrue($this->checkStatusCode('/token', true, 404));
         $this->assertTrue($this->checkStatusCode('/token/', true, 404));
         $this->assertTrue($this->checkStatusCode('/token/recruiting', true, 404));
@@ -156,7 +119,6 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/token/recruiting/'.rand(), true, 200));
         $this->assertTrue($this->checkStatusCode('/tokens', true));
         $this->assertTrue($this->checkStatusCode('/token_responses', true));
-        $this->assertTrue($this->checkStatusCode('/track', true));
         $this->assertTrue($this->checkStatusCode('/upload', true));// should be under ajax?
         $this->assertTrue($this->checkStatusCode('/user', true, 302));
         $this->assertTrue($this->checkStatusCode('/test', true, 302));// only on DEVELOPMENT
@@ -170,9 +132,6 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('', true, 302, true));
         $this->assertTrue($this->checkStatusCode('/', true, 302, true));
         $this->assertTrue($this->checkStatusCode('/index.html', true, 302, true));
-        $this->assertTrue($this->checkStatusCode('/about', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/attribution', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/activate', true, 302, true));
         $this->assertTrue($this->checkStatusCode('/admin', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/admin/active_users', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/admin/city', true, 200, true));
@@ -198,33 +157,18 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here/', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/careers', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/create_company', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/create_recruiting', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/email_credentials', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/email_list', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/email_signup', true, 302, true));
-        $this->assertTrue($this->checkStatusCode('/free_trial', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/forgot_password', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/iframe_code', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/invoice', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/job_listing', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/js', true, 301, true));
         $this->assertTrue($this->checkStatusCode('/js/', true, 404, true));
-        $this->assertTrue($this->checkStatusCode('/js/JSXTransformer.js', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/mascot', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/organization', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/password_reset', true, 302, true));
-        $this->assertTrue($this->checkStatusCode('/pricing', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/privacy', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/profile', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/recruiting_made_easy', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/robots.txt', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/send_recruiting', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/support', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/teapot', true, 418, true));
-        $this->assertTrue($this->checkStatusCode('/terms', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/thankyou', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/token', true, 404, true));
         $this->assertTrue($this->checkStatusCode('/token/', true, 404, true));
         $this->assertTrue($this->checkStatusCode('/token/recruiting', true, 404, true));
@@ -232,7 +176,6 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/token/recruiting/'.rand(), true, 200, true));
         $this->assertTrue($this->checkStatusCode('/tokens', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/token_responses', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/track', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/upload', true, 200, true));// should be under ajax?
         $this->assertTrue($this->checkStatusCode('/user', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/test', true, 302, true));// only on DEVELOPMENT
