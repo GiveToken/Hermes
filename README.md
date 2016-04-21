@@ -207,13 +207,9 @@ For JavaScript testing, run the following command
 
 ## <a id="deployment"></a>Deployment
 
-#### `develop` -> staging site
-
-#### `master` -> production
-
 ### Build Script
 The build script (`build.sh`) runs unit tests, warns you of any untracked or
-uncommited files, minifies JavaScript & CSS, and Polybuilds the token.
+uncommited files, minifies JavaScript & CSS.
 The full set of options is available in the help menu
 
     ./build.sh -h

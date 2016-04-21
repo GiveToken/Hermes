@@ -16,7 +16,7 @@
       <?php }?>
 
       <a class="navbar-brand" href="<?php echo '/' ?>">
-        <img src="/assets/img/sizzle-logo.png" alt="">
+        <img src="/images/sizzle-logo.png" alt="">
       </a>
 
     </div>

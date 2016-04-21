@@ -28,7 +28,7 @@
 
 <div class="container">
   <!-- LOGO -->
-  <img src="/assets/img/sizzle-logo.png" alt="LOGO">
+  <img src="/images/sizzle-logo.png" alt="LOGO">
 
   <!-- COPYRIGHT TEXT -->
   <p class="copyright">

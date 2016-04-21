@@ -10,14 +10,6 @@
 <!-- SITE TITLE -->
 <title><?php echo TITLE;?></title>
 
-<!-- =========================
-      FAV AND TOUCH ICONS
-
-<link rel="icon" href="/assets/img/favicon.ico">
-<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114.png">
-============================== -->
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <meta name="msapplication-TileColor" content="#ffffff">
