@@ -10,7 +10,7 @@ use Sizzle\Bacon\{
 };
 
 // set release version
-define('VERSION', '1.11.0');
+define('VERSION', '1.0.0');
 
 // autoload classes
 require_once __DIR__.'/src/autoload.php';

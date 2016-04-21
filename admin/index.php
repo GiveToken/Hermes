@@ -26,6 +26,7 @@ require __DIR__.'/../header.php';
         <li>
           Tokens:
           <a href="/admin/tokens">All</a> •
+          <a href="https://www.gosizzle.io/create_recruiting">Create</a> •
           <a href="/admin/send_token">Send</a> •
           <a href="/admin/transfer_token">Transfer Ownership</a>
         </li>

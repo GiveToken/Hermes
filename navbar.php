@@ -24,18 +24,11 @@
     <!-- NAVIGATION LINKS -->
     <div class="navbar-collapse collapse" id="kane-navigation">
       <ul class="nav navbar-nav navbar-right main-navigation">
-        <?php if (!logged_in()) { ?>
-            <li><a href="/" class="external sizzle-nav-choice">Home</a></li>
-        <?php } else { ?>
-            <li><a href="/create_recruiting" class="external sizzle-nav-choice">Create Token</a></li>
-        <?php } ?>
         <li><a href="http://blog.gosizzle.io" class="external sizzle-nav-choice">Blog</a></li>
         <?php if (logged_in()) { ?>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle external sizzle-nav-choice" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="/pricing" class="external account-dropdown sizzle-nav-choice" id="upgrade-dropdown">Upgrade</a></li>
-                <li role="separator" class="divider" id="upgrade-divider"></li>
                 <li><a href="/tokens" class="external account-dropdown sizzle-nav-choice">My Tokens</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="javascript:void(0)" class="account-dropdown sizzle-nav-choice" id="logout-button" onclick="logout();">Logout</a></li>

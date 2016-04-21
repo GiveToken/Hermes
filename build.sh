@@ -5,13 +5,13 @@ if [ "$#" -gt 0 -a "$1" = "-h" ]
 then
   echo ""
   echo "NAME"
-  echo "     build -- builds S!zzle project"
+  echo "     build -- builds the hermes.gosizzle.io website"
   echo ""
   echo "SYNOPSIS"
-  echo "     ./build.sh [-h] [project]"
+  echo "     ./build.sh [-h]"
   echo ""
   echo "DESCRIPTION"
-  echo "     This tool is for building & pushing the S!zzle project. Choosing the project option master or staging."
+  echo "     This tool is for building the hermes.gosizzle.io admin website. "
   echo ""
   echo "     The following options are available:"
   echo ""
@@ -22,11 +22,6 @@ fi
 
 # run PHP unit tests
 ./vendor/bin/phpunit --bootstrap src/tests/autoload.php -c tests.xml
-echo ""
-
-# build polymer
-npm run polybuild
-echo "Polybuild finished."
 echo ""
 
 # minify css
@@ -53,14 +48,3 @@ echo ""
 
 # see what's changed
 git status
-
-# push it up to github
-if [ "$#" -gt 0 ]
-then
-  echo ""
-  case $1 in
-#    "master") do nothing
-    "staging") git push github develop ;;
-#    *) do nothing ;;
-  esac
-fi
