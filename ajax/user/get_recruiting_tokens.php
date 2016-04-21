@@ -9,7 +9,7 @@ $user_id = (int) ($endpoint_parts[4] ?? '');
 
 $success = 'false';
 $data = '';
-if (is_admin() || (logged_in() && $user_id == $_SESSION['user_id'])) {
+if (logged_in()) {
     /*$token = new RecruitingToken($id, 'long_id');
     if (isset($token->id)) {
         $success = 'true';

@@ -4,7 +4,7 @@ use \Sizzle\Bacon\Database\{
     User
 };
 
-if (!logged_in() || !is_admin()) {
+if (!logged_in()) {
     header('Location: '.'/');
 }
 

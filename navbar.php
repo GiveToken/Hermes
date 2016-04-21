@@ -41,9 +41,7 @@
                 <li><a href="javascript:void(0)" class="account-dropdown sizzle-nav-choice" id="logout-button" onclick="logout();">Logout</a></li>
               </ul>
             </li>
-            <?php if (is_admin()) { ?>
-                <li><a href="/admin" class="external sizzle-nav-choice">Admin</a></li>
-            <?php }?>
+            <li><a href="/admin" class="external sizzle-nav-choice">Admin</a></li>
         <?php } else { ?>
             <li><a href="javascript:void(0)" onclick="loginOpen()" class="sizzle-nav-choice">Login</a></li>
         <?php }?>

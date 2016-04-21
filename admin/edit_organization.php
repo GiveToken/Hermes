@@ -3,7 +3,7 @@ use \Sizzle\Bacon\Database\{
     Organization
 };
 
-if (!logged_in() || !is_admin()) {
+if (!logged_in()) {
     header('Location: '.'/');
 }
 

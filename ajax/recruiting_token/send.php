@@ -6,7 +6,7 @@ use \Sizzle\Bacon\{
 };
 use Sizzle\Bacon\Service\MandrillEmail;
 
-if (logged_in() && is_admin()) {
+if (logged_in()) {
     $vars = ['user_id', 'token_id'];
     foreach ($vars as $var) {
         $$var = (int) ($_POST[$var] ?? 0);

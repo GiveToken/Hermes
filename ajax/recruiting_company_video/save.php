@@ -12,7 +12,6 @@ if (isset($_SESSION['user_id'])) {
             if (in_array($_POST['source'], ['youtube','vimeo'])) {
                 // see if company belongs to this user
                 $RecruitingCompany = new RecruitingCompany($_POST['recruiting_company_id'], 'id');
-                if ($RecruitingCompany->user_id == $user_id || is_admin()) {
                     try {
                         // Save the token video
                         $recruiting_company_video = new RecruitingCompanyVideo();
@@ -25,10 +24,6 @@ if (isset($_SESSION['user_id'])) {
                         $response['message'] = $e->getMessage();
                         $repsonse['object'] = $e;
                     }
-                } else {
-                    $response['status'] = "ERROR";
-                    $response['message'] = "User does not have access to this token.";
-                }
             } else {
                 $response['status'] = "ERROR";
                 $response['message'] = "Must be a YouTube or Vimeo video.";

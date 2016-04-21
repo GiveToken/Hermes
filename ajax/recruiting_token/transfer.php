@@ -6,7 +6,7 @@ use \Sizzle\Bacon\Database\{
 
 $success = 'false';
 $data = '';
-if (logged_in() && is_admin() && isset($_POST['token_id'], $_POST['old_user_id'], $_POST['new_user_id'])) {
+if (logged_in() && isset($_POST['token_id'], $_POST['old_user_id'], $_POST['new_user_id'])) {
     $long_id = $_POST['token_id'];
     $old_user_id = (int) $_POST['old_user_id'];
     $new_user_id = (int) $_POST['new_user_id'];

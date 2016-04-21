@@ -14,11 +14,7 @@ if (isset($_SESSION['user_id'])) {
             error_log($e->getMessage());
             $errors[] = $e->getMessage();
         }
-        if ($RecruitingCompany->user_id != $user_id && !is_admin()) {
-            $errors[] = 'User does not have permission to modify this company.';
-        } else {
-            $data = $RecruitingCompany;
-        }
+        $data = $RecruitingCompany;
     } else {
         $errors[] = 'Company id required';
     }

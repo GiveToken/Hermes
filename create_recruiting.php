@@ -16,9 +16,6 @@ $user_id = $_SESSION['user_id'] ?? '';
 
 if (isset($_GET['id'])) {
     $token = new RecruitingToken($_GET['id'], 'long_id');
-    if ($token->user_id != $user_id && !is_admin()) {
-        header('Location: '.APP_URL.'/tokens');
-    }
     $token_company = new RecruitingCompany($token->recruiting_company_id);
 } else {
     $token = new RecruitingToken();
@@ -261,7 +258,6 @@ require __DIR__.'/header.php';
                         <?php paper_textarea('Perks', 'perks', HTML::from($token->perks ?? '')); ?>
                     </div>
                 </paper-card>
-                <?php if(is_admin()) { ?>
                     <paper-card id="admin-info" heading="Admin Settings">
                       <div class="field-container">
                         <paper-checkbox
@@ -284,32 +280,13 @@ require __DIR__.'/header.php';
                         </div>
                       <?php }?>
                     </paper-card>
-                <?php }?>
-
-<?php /*                <div class="button-container">
-                    <paper-button raised class="bottom-button" onclick="saveRecruitingToken(true)">SAVE &amp; PREVIEW</paper-button>
-                    <a href="#" id="token-preview" target="_blank"></a>
-                </div>*/?>
             </form>
         </div>
         <div id="right-column" class="pull-right">
-            <?php /*
-            <paper-card heading="Token Strength" id="token-strength">
-            </paper-card>
-            */ ?>
             <div class="button-container">
                 <paper-button raised onclick="openToken()">OPEN</paper-button>
                 <paper-button id="save-continue-button" raised onclick="saveRecruitingToken()">SAVE &amp; CONTINUE</paper-button>
             </div>
-            <?php /*if (is_admin()) : ?>
-                <paper-card heading="Add To Library" id="add-to-library">
-                    <div id="library-button-container">
-                        <paper-button class="library-button" raised>Company</paper-button>
-                        <paper-button class="library-button" raised>Images</paper-button>
-                        <paper-button class="library-button" raised>Video</paper-button>
-                    </div>
-                </paper-card>
-            <?php endif;*/ ?>
        </div>
     </div>
 
@@ -353,7 +330,6 @@ require __DIR__.'/header.php';
     <script src="js/create_common.min.js?v=<?php echo VERSION;?>"></script>
     <script src="js/create_recruiting.min.js?v=<?php echo VERSION;?>"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <?php if(is_admin()) { ?>
         <script>
         /**
          * Uploads a screenshot of the token
@@ -391,7 +367,6 @@ require __DIR__.'/header.php';
           });
         }
         </script>
-    <?php }?>
     <script>
     $( document ).ready(function() {
       $('#city-menu').hide();

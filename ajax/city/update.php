@@ -3,7 +3,7 @@ use Sizzle\Bacon\Database\City;
 
 $success = 'false';
 $data = '';
-if (logged_in() && is_admin()) {
+if (logged_in()) {
 
     // create City
     $City = new City($_POST['city_id'] ?? '');

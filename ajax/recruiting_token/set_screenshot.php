@@ -1,7 +1,7 @@
 <?php
 use \Sizzle\Bacon\Database\RecruitingTokenImage;
 
-if (logged_in() && is_admin()) {
+if (logged_in()) {
     $vars = ['fileName', 'tokenId'];
     foreach ($vars as $var) {
         $$var = $_POST[$var] ?? '';

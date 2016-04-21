@@ -1,5 +1,5 @@
 <?php
-if (!logged_in() || !is_admin()) {
+if (!logged_in()) {
     header('Location: '.'/');
 }
 
@@ -16,21 +16,12 @@ require __DIR__.'/../header.php';
     <nav id="create-top-nav">
       <ul>
         <li>
-          <a href="/admin/visitors">Website Vistors</a>
+          Cities:
+          <a href="/admin/city">Edit</a>
         </li>
         <li>
           Organizations:
           <a href="/admin/organizations">All</a>
-        </li>
-        <li>
-          Users:
-          <a href="/admin/users">All</a> •
-          <a href="/admin/stalled_new_customers">Stalled</a> •
-          <a href="/admin/no_card_customers">Free Trial</a> •
-          <a href="/admin/active_users">Recently Active</a>
-        </li>
-        <li>
-          <a href="/admin/create_account">Create Account</a>
         </li>
         <li>
           Tokens:
@@ -39,11 +30,22 @@ require __DIR__.'/../header.php';
           <a href="/admin/transfer_token">Transfer Ownership</a>
         </li>
         <li>
-          Cities:
-          <a href="/admin/city">Edit</a>
+          Users:
+          <a href="/admin/users">All</a> •
+          <a href="/admin/create_account">Create Account</a> •
+          <a href="/admin/stalled_new_customers">Stalled</a> •
+          <a href="/admin/no_card_customers">Free Trial</a> •
+          <a href="/admin/active_users">Recently Active</a>
+        </li>
+        <li>
+          <a href="/admin/visitors">Website Vistors</a>
         </li>
       </ul>
     </nav>
+    <img src="/images/sizzle_mascot_cant_wait_to_sizzle.jpg" />
+  </div>
+  <div>
+
   </div>
     <?php require __DIR__.'/../footer.php';?>
 </body>

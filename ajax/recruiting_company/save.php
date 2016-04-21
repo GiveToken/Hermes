@@ -17,10 +17,6 @@ if (isset($_SESSION['user_id'])) {
             $response['message'] = $e->getMessage();
             $response['object'] = $e;
         }
-        if (isset($RecruitingCompany->user_id) && $RecruitingCompany->user_id != $user_id && !is_admin()) {
-            $response['status'] = "ERROR";
-            $response['message'] = 'User does not have permission to modify this company.';
-        }
     } else {
         $RecruitingCompany = new RecruitingCompany();
     }

@@ -1,7 +1,7 @@
 <?php
 use \Sizzle\Bacon\Database\RecruitingTokenResponse;
 
-if (!logged_in() || !is_admin()) {
+if (!logged_in()) {
     header('Location: '.'/');
 }
 

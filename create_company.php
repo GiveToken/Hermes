@@ -16,9 +16,6 @@ $referrer = $_GET['referrer'] ?? '';
 
 if (isset($_GET['id'])) {
     $token_company = new RecruitingCompany($_GET['id']);
-    if (isset($token_company->user_id) && $token_company->user_id != $user_id && !is_admin()) {
-        header('Location: '.APP_URL.'tokens');
-    }
     $token_images = (new RecruitingCompanyImage())->getByCompanyId((int) $token_company->id);
     $token_videos = (new RecruitingCompanyVideo())->getByCompanyId((int) $token_company->id);
 } else {
@@ -357,7 +354,7 @@ require __DIR__.'/header.php';
         <form is="iron-form" id="use-existing-company-form">
             <div class="field-container">
             <?php
-                $companies = is_admin() ? (new RecruitingCompany())->getAll() : RecruitingToken::getUserCompanies((int) $user_id);
+                $companies = (new RecruitingCompany())->getAll();
                 $options = array();
                 foreach ($companies as $co) {
                     $options[$co['id']] = '' != $co['name'] ? $co['name'] : 'Unnamed Company';
