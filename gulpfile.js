@@ -2,5 +2,4 @@
 require('./js/gulp/tasks/js');
 require('./js/gulp/tasks/css');
 require('./js/gulp/tasks/json');
-require('./js/gulp/tasks/polybuild');
 require('./js/gulp/tasks/watch');

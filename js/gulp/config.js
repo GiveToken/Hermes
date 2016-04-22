@@ -6,8 +6,7 @@ module.exports = {
         js_build: path.join('public', 'js', 'dist'),
         js_mnm: path.join('public', 'js'),
         css_build: path.join('public', 'css', 'dist'),
-        css_mnm: path.join('public', 'css'),
-        polybuild: '.'
+        css_mnm: path.join('public', 'css')
     },
     builds: {
         /**
@@ -77,10 +76,6 @@ module.exports = {
             css: []
         }
     },
-
-    polybuild: [
-        'recruiting_token.php'
-    ],
 
     minify_and_migrate: {
         js: [

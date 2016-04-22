@@ -1,5 +1,5 @@
 {
-  "name": "Sizzle.IO",
+  "name": "Hermes.Sizzle.IO",
   "version": "0.0.0",
   "description": "",
   "devDependencies": {
@@ -19,7 +19,6 @@
     "jquery": "1.11.3",
     "mocha": "^2.4.5",
     "mocha-jsdom": "^1.1.0",
-    "polybuild": "^1.1.0",
     "run-sequence": "^1.1.5",
     "sinon": "^1.17.3"
   },
@@ -28,7 +27,6 @@
     "css": "./node_modules/.bin/gulp css",
     "js": "./node_modules/.bin/gulp js",
     "json": "./node_modules/.bin/gulp json",
-    "polybuild": "./node_modules/.bin/gulp polybuild",
     "test": "cd js && ../node_modules/.bin/mocha --require test/bootstrap.js test"
   },
   "author": ""
