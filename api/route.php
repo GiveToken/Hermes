@@ -23,7 +23,7 @@ if (isset($pieces[1])) {
 
 // validate user
 if (isset($get_parts['api_key'])) {
-    $user = User::fetch($get_parts['api_key'], 'api_key');
+    $user = (new User())->fetch($get_parts['api_key'], 'api_key');
     if ((int) $user->id <= 0) {
         $errors[] = 'Invalid API Key';
     }

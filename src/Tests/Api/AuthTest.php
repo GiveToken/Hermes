@@ -35,7 +35,7 @@ extends \PHPUnit_Framework_TestCase
         $sql = "INSERT INTO user (email_address, api_key)
                 VALUES ('{$this->email}', '{$this->apiKey}')";
         $userId = insert($sql);
-        $this->user = User::fetch($this->apiKey, 'api_key');
+        $this->user = (new User())->fetch($this->apiKey, 'api_key');
     }
 
     /**

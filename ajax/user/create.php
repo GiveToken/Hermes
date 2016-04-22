@@ -16,7 +16,7 @@ foreach ($vars as $var) {
 }
 
 if (filter_var($signup_email, FILTER_VALIDATE_EMAIL)) {
-    if (User::exists($signup_email)) {
+    if ((new User())->exists($signup_email)) {
         $data['errors'] = "The email address $signup_email has already been registered.";
     } else {
         $user = new User();

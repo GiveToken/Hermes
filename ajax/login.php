@@ -15,8 +15,8 @@ $response['app_root'] = '/';
 $email = $_POST['login_email'] ?? '';
 $login_type = $_POST['login_type'] ?? 'EMAIL';
 
-if (User::exists($email)) {
-    $user = User::fetch($email);
+if ((new User())->exists($email)) {
+    $user = (new User())->fetch($email);
     $expires = $user->active_until ?? date('Y-m-d');
     $DateTime1 = new \DateTime($expires);
     $DateTime2 = new \DateTime(date('Y-m-d'));

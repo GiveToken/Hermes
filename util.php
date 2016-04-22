@@ -2,11 +2,6 @@
 use Sizzle\Bacon\Connection;
 require_once __DIR__.'/src/autoload.php';
 
-function escape_string($string)
-{
-    return Connection::$mysqli->real_escape_string($string);
-}
-
 function execute_query($sql)
 {
     if ($result = Connection::$mysqli->query($sql)) {
