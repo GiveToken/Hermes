@@ -93,9 +93,6 @@ class Route
             case 'ajax':
                 include __DIR__.'/../ajax/route.php';
                 break;
-            case 'api_documentation':
-                include __DIR__.'/../api_documentation.php';
-                break;
             case 'create_company':
                 include __DIR__.'/../create_company.php';
                 break;

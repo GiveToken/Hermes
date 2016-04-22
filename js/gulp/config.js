@@ -50,30 +50,6 @@ module.exports = {
                 p.styl('variables'),
                 p.styl('Pricing')
             ]
-        },
-
-        /**
-         * API DOCUMENTATION BUILD
-         */
-        api_documentation: {
-            vendor_js: [
-                p.vendor_js('jquery-migrate-1.2.1.min'),
-                p.vendor_js('jquery.slideto.min'),
-                p.vendor_js('jquery.wiggle.min'),
-                p.vendor_js('jquery.ba-bbq.min'),
-                p.vendor_js('handlebars-2.0.0.min'),
-                p.vendor_js('highlight.7.3.pack'),
-                p.vendor_js('underscore-min'),
-                p.vendor_js('backbone-min'),
-                p.vendor_js('swagger-ui.min'),
-                p.vendor_js('highlight.7.3.pack'),
-                p.vendor_js('jsoneditor.min'),
-                p.vendor_js('marked.min'),
-                p.vendor_js('swagger.oath.min')
-            ],
-            vendor_css: [],
-            js: [],
-            css: []
         }
     },
 
