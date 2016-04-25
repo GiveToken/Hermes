@@ -8,7 +8,7 @@ $bucket = 'city.images';
 
 $success = 'false';
 $data = '';
-if (logged_in()) {
+if (logged_in() && ENVIRONMENT == 'production') {
     $City = new City($_POST['city_id'] ?? '');
     if ($City->id > 0 && 4 == count($_FILES)) {
         // city exists! time to replace images...
