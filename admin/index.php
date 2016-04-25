@@ -20,6 +20,12 @@ require __DIR__.'/../header.php';
           <a href="/admin/city">Edit</a>
         </li>
         <li>
+          Github:
+          <a href="https://www.github.com/GiveToken/Bacon">Bacon</a> •
+          <a href="https://www.github.com/GiveToken/Giftbox">Giftbox</a> •
+          <a href="https://www.github.com/GiveToken/Hermes">Hermes</a>
+        </li>
+        <li>
           Organizations:
           <a href="/admin/organizations">All</a>
         </li>

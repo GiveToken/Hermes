@@ -50,7 +50,6 @@
   /** TODO Move these into marketing.min build */
 ?>
   <script src="/js/login.min.js?v=<?php echo VERSION;?>"></script>
-  <script src="/js/signup.min.js?v=<?php echo VERSION;?>"></script>
 <?php } elseif (isset($_SESSION['stripe_id'])) { ?>
   <script>
   $(document).ready(function() {

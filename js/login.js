@@ -52,7 +52,7 @@ function processLogin(userInfo) {
     if(data.status === "SUCCESS") {
       var redirect = decodeURIComponent(getQueryParameters()['next']);
       if (redirect == 'undefined') {
-        redirect = "profile";
+        redirect = "admin";
       }
       if (redirect.startsWith('/')) {
         redirect = redirect.slice(1);
