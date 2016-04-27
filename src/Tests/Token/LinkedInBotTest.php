@@ -176,7 +176,7 @@ extends \PHPUnit_Framework_TestCase
 
         // cleanup
         $sql = "DELETE FROM recruiting_company_image WHERE id = '$id'";
-        execute($sql);
+        execute_query($sql);
     }
 
     /**
@@ -226,7 +226,7 @@ extends \PHPUnit_Framework_TestCase
 
         // cleanup
         $sql = "DELETE FROM recruiting_token_image WHERE id = '$id'";
-        execute($sql);
+        execute_query($sql);
     }
 
     /**
@@ -464,7 +464,7 @@ extends \PHPUnit_Framework_TestCase
 
         // cleanup
         $sql = "DELETE FROM recruiting_token_image WHERE id = '$id'";
-        execute($sql);
+        execute_query($sql);
     }
 
     /**

@@ -65,7 +65,7 @@ extends \PHPUnit_Framework_TestCase
 
         // cleanup
         $sql = "DELETE FROM recruiting_token_image WHERE id = '{$image->id}'";
-        execute($sql);
+        execute_query($sql);
     }
 
     /**

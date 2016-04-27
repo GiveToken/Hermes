@@ -87,7 +87,7 @@ extends \PHPUnit_Framework_TestCase
         if (isset($this->images)) {
             foreach ($this->images as $id) {
                 $sql = "DELETE FROM recruiting_company_image WHERE id = '$id'";
-                execute($sql);
+                execute_query($sql);
             }
         }
         $this->deleteRecruitingTokens();

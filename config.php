@@ -10,7 +10,7 @@ use Sizzle\Bacon\{
 };
 
 // set release version
-define('VERSION', '0.0.1');
+define('VERSION', '0.0.2');
 
 // autoload classes
 require_once __DIR__.'/src/autoload.php';
@@ -22,11 +22,11 @@ require_once __DIR__.'/util.php';
 // Determine environment & fix URL as needed
 $server = $_SERVER['SERVER_NAME'] ?? null;
 if ('gosizzle.io' == strtolower($server) || 'givetoken.com' == strtolower($server) || 'www.givetoken.com' == strtolower($server)) {
-    $url = 'https://www.gosizzle.io'.$_SERVER['REQUEST_URI'];
+    $url = 'https://hermes.gosizzle.io'.$_SERVER['REQUEST_URI'];
     header("Location: $url ", true, 301);
 }
 if (!defined('ENVIRONMENT')) {
-    define('ENVIRONMENT', 'www.gosizzle.io' == $server ? 'production' : ('127.0.0.1' == $_SERVER['SERVER_ADDR'] ? 'local' : 'development'));
+    define('ENVIRONMENT', 'hermes.gosizzle.io' == $server ? 'production' : ('127.0.0.1' == $_SERVER['SERVER_ADDR'] ? 'local' : 'development'));
 }
 
 
@@ -64,8 +64,8 @@ if (isset($_SERVER['HTTPS'])) {
         $prefix = "https://";
         $use_https = true;
     } else {
-        if('www.gosizzle.io' == $server) {
-            $url = 'https://www.gosizzle.io'.$_SERVER['REQUEST_URI'];
+        if('hermes.gosizzle.io' == $server) {
+            $url = 'https://hermes.gosizzle.io'.$_SERVER['REQUEST_URI'];
             header("Location: $url ", true, 301);
         }
     }
