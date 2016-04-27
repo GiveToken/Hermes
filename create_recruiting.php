@@ -295,7 +295,7 @@ require __DIR__.'/header.php';
         <form is="iron-form" id="open-token-form">
             <div class="field-container">
             <?php
-                $user_tokens = RecruitingToken::getUserTokens((int) $user_id);
+                $user_tokens = (new RecruitingToken())->getUserTokens((int) $user_id);
                 $tokens = array();
                 foreach ($user_tokens as $tkn) {
                     $tokenCompanyName = ''!=$tkn->company ? $tkn->company : 'Unnamed Company';

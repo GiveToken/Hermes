@@ -26,9 +26,9 @@ if ((new User())->exists($email)) {
             $response['status'] = 'SUCCESS';
             $response['message'] = "Log in with Facebook successful.";
         } else if ($login_type == 'EMAIL') {
-            if (!$user->password) {
+            if ('Y' != $user->admin) {
                 $response['status'] = "ERROR";
-                $response['message'] = "This account was created using Facebook.<br>Please use the Log In With FaceBook button.";
+                $response['message'] = "Invalid credentials";
             } else if (!password_verify($_POST['password'] ?? '', $user->password)) {
                 $response['status'] = "ERROR";
                 $response['message'] = 'The password you entered is incorrect.';

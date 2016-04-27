@@ -10,7 +10,7 @@ use Sizzle\Bacon\{
 };
 
 // set release version
-define('VERSION', '1.0.0');
+define('VERSION', '0.0.1');
 
 // autoload classes
 require_once __DIR__.'/src/autoload.php';
@@ -38,10 +38,10 @@ if (!defined('SLACK_TOKEN')) {
 $logger = new Logger('bugs');
 if (ENVIRONMENT != 'local') {
   if (ENVIRONMENT != 'production') {
-      $name = 'Dev Application: '.$_SERVER['REQUEST_URI'];
+      $name = 'Dev Hermes: '.$_SERVER['REQUEST_URI'];
       $slackHandler = new SlackHandler(SLACK_TOKEN, '#bugs-staging', $name, false);
   } else {
-      $name = 'Web Application: '.$_SERVER['REQUEST_URI'];
+      $name = 'Production Hermes: '.$_SERVER['REQUEST_URI'];
       $slackHandler = new SlackHandler(SLACK_TOKEN, '#bugs', $name, false);
   }
   $slackHandler->setLevel(Logger::DEBUG);

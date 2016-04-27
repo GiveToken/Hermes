@@ -33,7 +33,7 @@ body {
         </thead>
         <tbody>
             <?php
-            foreach (UserMilestone::stalledCustomers() as $customer) { ?>
+            foreach ((new UserMilestone())->stalledCustomers() as $customer) { ?>
                 <tr>
                   <td align="left">
                     <?php

@@ -32,7 +32,7 @@ if (isset($_POST['email'], $_POST['message'])
         )
     );
     $status = 'SUCCESS';
-    Support::create($email, $message);
+    (new Support())->create($email, $message);
 }
 header('Content-Type: application/json');
 echo json_encode(array('status' => $status));
