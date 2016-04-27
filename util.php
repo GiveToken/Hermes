@@ -12,14 +12,6 @@ function execute_query($sql)
     }
 }
 
-function execute($sql)
-{
-    if (!Connection::$mysqli->query($sql)) {
-        error_log($sql);
-        throw new Exception(Connection::$mysqli->error);
-    }
-}
-
 function insert($sql)
 {
     if (!Connection::$mysqli->query($sql)) {

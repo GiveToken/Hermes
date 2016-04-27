@@ -68,63 +68,6 @@ extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the endpoint routing of public/index.php for logged in user
-     */
-    public function testLoggedInEndpoints()
-    {
-        $this->assertTrue($this->checkStatusCode('', true, 302));
-        $this->assertTrue($this->checkStatusCode('/', true, 302));
-        $this->assertTrue($this->checkStatusCode('/index.html', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/active_users', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/city', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/create_account', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/edit_organization', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/organizations', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/no_card_customers', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/send_token', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/stalled_new_customers', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/tokens', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/transfer_token', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/users', true, 302));
-        $this->assertTrue($this->checkStatusCode('/admin/visitors', true, 302));
-        $this->assertTrue($this->checkStatusCode('/ajax', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here', true));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here/', true));
-        $this->assertTrue($this->checkStatusCode('/create_company', true));
-        $this->assertTrue($this->checkStatusCode('/create_recruiting', true));
-        $this->assertTrue($this->checkStatusCode('/email_credentials', true));
-        $this->assertTrue($this->checkStatusCode('/email_list', true));
-        $this->assertTrue($this->checkStatusCode('/invoice', true));
-        $this->assertTrue($this->checkStatusCode('/js', true, 301));
-        $this->assertTrue($this->checkStatusCode('/js/', true, 404));
-        $this->assertTrue($this->checkStatusCode('/mascot', true));
-        $this->assertTrue($this->checkStatusCode('/organization', true, 302));
-        $this->assertTrue($this->checkStatusCode('/robots.txt', true));
-        $this->assertTrue($this->checkStatusCode('/send_recruiting', true));
-        $this->assertTrue($this->checkStatusCode('/teapot', true, 418));
-        $this->assertTrue($this->checkStatusCode('/token', true, 404));
-        $this->assertTrue($this->checkStatusCode('/token/', true, 404));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting', true, 404));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting/', true, 200));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting/'.rand(), true, 200));
-        $this->assertTrue($this->checkStatusCode('/tokens', true));
-        $this->assertTrue($this->checkStatusCode('/token_responses', true));
-        $this->assertTrue($this->checkStatusCode('/upload', true));// should be under ajax?
-        $this->assertTrue($this->checkStatusCode('/user', true, 302));
-        $this->assertTrue($this->checkStatusCode('/test', true, 302));// only on DEVELOPMENT
-    }
-
-    /**
      * Tests the endpoint routing of public/index.php for logged in admin user
      */
     public function testLoggedInAdminEndpoints()
