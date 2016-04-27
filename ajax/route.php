@@ -17,6 +17,11 @@ if (isset($pieces[1])) {
     }
 }
 
+// redirect if not login
+if (!logged_in() && 'login' != $endpoint_parts[2]) {
+  header('Location: '.'/');
+}
+
 // Execute script if exists
 if (isset($endpoint_parts[2])) {
     $file1 = __DIR__.'/'.$endpoint_parts[2] . '.php';

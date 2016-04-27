@@ -18,22 +18,15 @@ require_once __DIR__.'/../../util.php';
 /**
  * This is a testing function for obtaining a valid cookie.
  *
- * @param boolean $admin - optionally specify user is to be an admin
- *
  * @return string - a cookie to access a logged in session
  */
-function getTestCookie($admin = false)
+function getTestCookie()
 {
     $password = 'nachos';
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $username = rand().'@gosizzle.io';
-    if ($admin) {
-        $query = "INSERT INTO user (first_name, last_name, email_address, password, admin)
-                  VALUES ('fake', 'user', '$username', '$hash', 'Y')";
-    } else {
-        $query = "INSERT INTO user (first_name, last_name, email_address, password)
-                  VALUES ('fake', 'user', '$username', '$hash')";
-    }
+    $query = "INSERT INTO user (first_name, last_name, email_address, password, admin)
+              VALUES ('fake', 'user', '$username', '$hash', 'Y')";
     $id = insert($query);
     $ch = curl_init(TEST_URL . '/ajax/login');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

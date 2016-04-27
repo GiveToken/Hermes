@@ -31,18 +31,18 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/admin/transfer_token', false, 302));
         $this->assertTrue($this->checkStatusCode('/admin/users', false, 302));
         $this->assertTrue($this->checkStatusCode('/admin/visitors', false, 302));
-        $this->assertTrue($this->checkStatusCode('/ajax'));
-        $this->assertTrue($this->checkStatusCode('/ajax/'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here'));
-        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here/'));
+        $this->assertTrue($this->checkStatusCode('/ajax', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here', false, 302));
+        $this->assertTrue($this->checkStatusCode('/ajax/anything/at/all/works/here/', false, 302));
         $this->assertTrue($this->checkStatusCode('/create_company', false, 302));
         $this->assertTrue($this->checkStatusCode('/create_recruiting', false, 302));
         $this->assertTrue($this->checkStatusCode('/email_credentials', false, 302));
@@ -50,21 +50,15 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/invoice', false, 302));
         $this->assertTrue($this->checkStatusCode('/js', false, 301));
         $this->assertTrue($this->checkStatusCode('/js/', false, 404));
-        $this->assertTrue($this->checkStatusCode('/mascot'));
         $this->assertTrue($this->checkStatusCode('/organization', false, 302));
         $this->assertTrue($this->checkStatusCode('/robots.txt'));
         $this->assertTrue($this->checkStatusCode('/send_recruiting', false, 302));
         $this->assertTrue($this->checkStatusCode('/teapot', false, 418));
-        $this->assertTrue($this->checkStatusCode('/token', false, 404));
-        $this->assertTrue($this->checkStatusCode('/token/', false, 404));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting', false, 404));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting/', false, 200));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting/'.rand(), false, 200));
         $this->assertTrue($this->checkStatusCode('/tokens', false, 302));
         $this->assertTrue($this->checkStatusCode('/token_responses', false, 302));
         $this->assertTrue($this->checkStatusCode('/upload'));// should be under ajax?
         $this->assertTrue($this->checkStatusCode('/user', false, 302));
-        $this->assertTrue($this->checkStatusCode('/test', false, 200));// only on DEVELOPMENT
+        $this->assertTrue($this->checkStatusCode('/test'));// only on DEVELOPMENT
     }
 
     /**
@@ -107,21 +101,15 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/invoice', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/js', true, 301, true));
         $this->assertTrue($this->checkStatusCode('/js/', true, 404, true));
-        $this->assertTrue($this->checkStatusCode('/mascot', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/organization', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/robots.txt', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/send_recruiting', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/teapot', true, 418, true));
-        $this->assertTrue($this->checkStatusCode('/token', true, 404, true));
-        $this->assertTrue($this->checkStatusCode('/token/', true, 404, true));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting', true, 404, true));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting/', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/token/recruiting/'.rand(), true, 200, true));
         $this->assertTrue($this->checkStatusCode('/tokens', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/token_responses', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/upload', true, 200, true));// should be under ajax?
         $this->assertTrue($this->checkStatusCode('/user', true, 200, true));
-        $this->assertTrue($this->checkStatusCode('/test', true, 302, true));// only on DEVELOPMENT
+        $this->assertTrue($this->checkStatusCode('/test', true, 200, true));// only on DEVELOPMENT
     }
 
     /**
@@ -146,20 +134,17 @@ extends \PHPUnit_Framework_TestCase
      * @param string  $endpoint   - the endpoint to test
      * @param boolean $loggedIn   - is the user logged in (defaults false)
      * @param int     $statusCode - the status code to check for (defaults to 200)
-     * @param boolean $isAdmin    - is the user logged in an admin (defaults false)
      *
      * @return boolean - desired status code was returned
      */
-    private function checkStatusCode(string $endpoint, bool $loggedIn = false, int $statusCode = 200, bool $isAdmin = false)
+    private function checkStatusCode(string $endpoint, bool $loggedIn = false, int $statusCode = 200)
     {
         $url = TEST_URL . $endpoint;
         ob_start();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, true);
-        if ($loggedIn && !$isAdmin) {
+        if ($loggedIn) {
             curl_setopt($ch, CURLOPT_COOKIE, TEST_COOKIE);
-        } else if ($loggedIn && $isAdmin) {
-            curl_setopt($ch, CURLOPT_COOKIE, getTestCookie(true));
         }
         curl_setopt($ch, CURLOPT_URL, $url);
         $response = curl_exec($ch);
@@ -170,8 +155,6 @@ extends \PHPUnit_Framework_TestCase
             return true;
         } else {
             echo "\nFound status $foundCode instead of $statusCode at '$endpoint'.\n";
-            //echo $response;
-            //echo $page;
             return false;
         }
     }
