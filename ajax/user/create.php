@@ -39,7 +39,7 @@ if (filter_var($signup_email, FILTER_VALIDATE_EMAIL)) {
 
         // response url
         // http://gosizzle.local/activate?uid=131&key=1234&type=emailtoken
-        $url = APP_URL.'activate?uid=' . $user->id;
+        $url = 'https://www.gosizzle.io/activate?uid=' . $user->id;
         $url .= '&key=' . $user->activation_key . '&type=' . $type;
         $data['url'] = $url;
         $success = 'true';
