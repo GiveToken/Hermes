@@ -1,7 +1,7 @@
 <?php
-use \Sizzle\{
-    Bacon\Database\User,
-    Bacon\Database\UserMilestone,
+use \Sizzle\Bacon\{
+    Database\User,
+    Database\UserMilestone,
     Service\PipedriveClient
 };
 
