@@ -93,18 +93,6 @@ class Route
             case 'ajax':
                 include __DIR__.'/../ajax/route.php';
                 break;
-            case 'create_company':
-                include __DIR__.'/../create_company.php';
-                break;
-            case 'create_recruiting':
-                include __DIR__.'/../create_recruiting.php';
-                break;
-            case 'email_credentials':
-                include __DIR__.'/../email_credentials.php';
-                break;
-            case 'email_list':
-                include __DIR__.'/../email_list.php';
-                break;
             case 'invoice':
                 include __DIR__.'/../invoice.php';
                 break;
@@ -126,9 +114,6 @@ class Route
                 break;
             case 'teapot':
                 include __DIR__.'/../teapot.php';
-                break;
-            case 'send_recruiting':
-                include __DIR__.'/../send_recruiting.php';
                 break;
             case 'tokens':
                 include __DIR__.'/../tokens.php';
