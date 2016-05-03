@@ -12,15 +12,6 @@ function execute_query($sql)
     }
 }
 
-function update($sql)
-{
-    if (!Connection::$mysqli->query($sql)) {
-        error_log($sql);
-        throw new Exception(Connection::$mysqli->error);
-    }
-    return Connection::$mysqli->affected_rows;
-}
-
 function logged_in()
 {
     return isset($_SESSION['user_id']);
