@@ -16,6 +16,10 @@ require __DIR__.'/../header.php';
     <nav id="create-top-nav">
       <ul>
         <li>
+          <i><a href="/queue?count=100">Incoming Job Queue</a></i>
+        </li>
+        <br/>
+        <li>
           Cities:
           <a href="/admin/city">Edit</a>
         </li>
