@@ -78,10 +78,10 @@ body {
                   <td><?php echo $row['nos'];?></td>
                   <td><?php echo $row['maybes'];?></td>
                   <td>
-                    <a href="/token/recruiting/<?php echo $row['long_id'];?>" target=_blank>
+                    <a href="<?=APP_URL?>token/recruiting/<?php echo $row['long_id'];?>" target=_blank>
                         <?php echo $row['job_title'];?>
                     </a>
-                    <a href="/create_recruiting?id=<?php echo $row['long_id'];?>" target=_blank>
+                    <a href="<?=APP_URL?>create_recruiting?id=<?php echo $row['long_id'];?>" target=_blank>
                       <span class="glyphicon glyphicon-pencil pull-right"></span>
                     </a>
                   </td>

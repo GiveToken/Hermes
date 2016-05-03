@@ -1,4 +1,6 @@
 <?php
+use Sizzle\Bacon\Connection;
+
 // always run tests in strict mode
 error_reporting(E_ALL);
 
@@ -27,7 +29,8 @@ function getTestCookie()
     $username = rand().'@gosizzle.io';
     $query = "INSERT INTO user (first_name, last_name, email_address, password, admin)
               VALUES ('fake', 'user', '$username', '$hash', 'Y')";
-    $id = insert($query);
+    execute_query($query);
+    $id = Connection::$mysqli->insert_id;
     $ch = curl_init(TEST_URL . '/ajax/login');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, 1);

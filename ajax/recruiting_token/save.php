@@ -1,7 +1,7 @@
 <?php
 use \Sizzle\Bacon\{
     Database\City,
-    HTML,
+    Text\HTML,
     Database\RecruitingCompany,
     Database\RecruitingToken,
     Database\UserMilestone

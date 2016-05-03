@@ -2,7 +2,7 @@
 use Sizzle\Bacon\{
     Database\RecruitingCompany,
     Database\RecruitingToken,
-    HTML
+    Text\HTML
 };
 
 if (isset($_SESSION['user_id'])) {
