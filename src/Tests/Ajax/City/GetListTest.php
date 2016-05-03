@@ -22,7 +22,7 @@ class GetListTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->city = $this->createCity("City #" . rand(0, 100));
+        $this->city = $this->createCity("City #" . rand());
         $this->url = TEST_URL . "/ajax/city/get_list";
     }
 

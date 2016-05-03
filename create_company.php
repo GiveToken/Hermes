@@ -1,6 +1,6 @@
 <?php
 use \Sizzle\Bacon\{
-    HTML,
+    Text\HTML,
     Database\RecruitingCompany,
     Database\RecruitingCompanyImage,
     Database\RecruitingCompanyVideo,

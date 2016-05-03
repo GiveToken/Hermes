@@ -18,7 +18,7 @@ if (isset($pieces[1])) {
 }
 
 // redirect if not login
-if (!logged_in() && 'login' != $endpoint_parts[2]) {
+if (!logged_in() && (!isset($endpoint_parts[2]) || 'login' != $endpoint_parts[2])) {
   header('Location: '.'/');
 }
 
