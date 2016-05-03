@@ -88,6 +88,17 @@ body {
         }
         ?>
         <br />
+        <h4><i class="greyed">Users:</i></h4>
+        <?php
+        $sql = "SELECT email_address, id
+                FROM user
+                WHERE organization_id = '$org_id'";
+        $result = execute_query($sql);
+        while ($row = $result->fetch_assoc()) {
+            echo "<a href=\"/user/{$row['id']}\">{$row['email_address']}</a><br />";
+        }
+        ?>
+        <br />
         <?php } else { ?>
         <h2>Invalid user</h2>
         <?php }?>
