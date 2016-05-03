@@ -35,8 +35,8 @@ require __DIR__.'/header.php';
             foreach ($responses as $response) {
                 echo '<tr>';
                 echo "<td align=left>";
-                echo "<a href=\"/create_recruiting?id={$response->long_id}\">{$response->job_title}</a>";
-                echo " (<a href=\"/token/recruiting/{$response->long_id}\">Preview</a>)";
+                echo "<a href=\"".APP_URL."create_recruiting?id={$response->long_id}\">{$response->job_title}</a>";
+                echo " (<a href=\"".APP_URL."token/recruiting/{$response->long_id}\" target=_blank>Preview</a>)";
                 echo "</td>";
                 echo "<td>".date('m/d/Y g:i a', strtotime($response->created))."</td>";
                 echo "<td><a href=\"/token_responses?id={$response->long_id}\">responses</a></td>";

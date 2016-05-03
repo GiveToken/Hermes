@@ -82,8 +82,17 @@ if (!defined('FILE_STORAGE_PATH')) {
     define('FILE_STORAGE_PATH', $file_storage_path);
 }
 
+if (!defined('BASE_URL')) {
+    define('BASE_URL', $prefix.$server.'/');
+}
+
 if (!defined('APP_URL')) {
-    define('APP_URL', $prefix.$server.'/');
+    if (ENVIRONMENT == 'production') {
+        define('APP_URL', 'https://www.gosizzle.io/');
+    } else {
+        // local if not on production
+        define('APP_URL', 'http://gosizzle.local/');
+    }
 }
 
 // connect to database
