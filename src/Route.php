@@ -124,6 +124,9 @@ class Route
             case 'token_responses':
                 include __DIR__.'/../token_responses.php';
                 break;
+            case 'token_stats':
+                include __DIR__.'/../token_stats.php';
+                break;
             case 'upload':
                 include __DIR__.'/../upload.php';
                 break;

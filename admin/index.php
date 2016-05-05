@@ -38,7 +38,8 @@ require __DIR__.'/../header.php';
           <a href="/admin/tokens">All</a> •
           <a href="<?=APP_URL?>create_recruiting">Create</a> •
           <a href="/admin/send_token">Send</a> •
-          <a href="/admin/transfer_token">Transfer Ownership</a>
+          <a href="/admin/transfer_token">Transfer Ownership</a> •
+          <a href="/token_stats">Stats</a>
         </li>
         <li>
           Users:
