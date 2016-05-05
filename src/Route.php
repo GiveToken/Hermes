@@ -112,6 +112,9 @@ class Route
             case 'organization':
                 include __DIR__.'/../admin/org_info.php';
                 break;
+            case 'queue':
+                include __DIR__.'/../queue.php';
+                break;
             case 'teapot':
                 include __DIR__.'/../teapot.php';
                 break;
