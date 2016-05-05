@@ -13,6 +13,13 @@ if (logged_in()) {
     }
     $message = $_POST['message'] ?? '';
     $subject = $_POST['subject'] ?? '';
+    $cc = array();
+    if (isset($_POST['cc'])) {
+        $splode = explode(',', $_POST['cc']);
+        foreach ($splode as $address) {
+            $cc[] = array('email'=>$address, 'type'=>'cc');
+        }
+    }
 
     $success = 'false';
     $data = '';
@@ -57,7 +64,7 @@ if (logged_in()) {
             $mandrill = new MandrillEmail();
             $mandrill->send(
                 array(
-                    'to'=>array(array('email'=>$user->email_address)),
+                    'to'=>array_merge(array(array('email'=>$user->email_address)), $cc),
                     'from_email'=>'token@gosizzle.io',
                     'from_name'=>'S!zzle',
                     'subject'=>$subject,
