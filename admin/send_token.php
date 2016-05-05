@@ -65,7 +65,6 @@ body {
           </select>
         </div>
         <div class="form-group">
-          <label for="subject" class="col-sm-2 control-label">Subject</label>
           <input
             type="text"
             class="form-control"
@@ -73,7 +72,13 @@ body {
             placeholder="Subject">
         </div>
         <div class="form-group">
-          <label for="message" class="col-sm-2 control-label">Message</label>
+          <input
+            type="text"
+            class="form-control"
+            name="cc"
+            placeholder="CC">
+        </div>
+        <div class="form-group">
           <textarea
             class="form-control"
             name="message"
