@@ -14,7 +14,7 @@ $users = execute_query(
      FROM user
      WHERE id IN (SELECT user_id FROM recruiting_token)
      GROUP BY user.id
-     ORDER BY user.id DESC"
+     ORDER BY user.email_address ASC"
 )->fetch_all(MYSQLI_ASSOC);
 
 define('TITLE', 'S!zzle - Update Recruiter Profile');
@@ -125,7 +125,7 @@ body {
           $('#send-form').css('margin-bottom','500px');
           window.scrollTo(0, 0);
         } else {
-          message = data.data.error ==! undefined ? data.data.error : 'All fields required!';
+          message = (typeof data.data.error !== undefined) ? data.data.error : 'All fields required!';
           alert(message);
         }
       }, 'json');
