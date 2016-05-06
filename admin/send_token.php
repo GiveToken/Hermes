@@ -14,7 +14,7 @@ $users = execute_query(
      FROM user
      WHERE id IN (SELECT user_id FROM recruiting_token)
      GROUP BY user.id
-     ORDER BY user.id DESC"
+     ORDER BY user.email_address ASC"
 )->fetch_all(MYSQLI_ASSOC);
 
 define('TITLE', 'S!zzle - Update Recruiter Profile');
