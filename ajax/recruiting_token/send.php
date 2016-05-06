@@ -14,7 +14,7 @@ if (logged_in()) {
     $message = $_POST['message'] ?? '';
     $subject = $_POST['subject'] ?? '';
     $cc = array();
-    if (isset($_POST['cc'])) {
+    if (isset($_POST['cc']) && '' != $_POST['cc']) {
         $splode = explode(',', $_POST['cc']);
         foreach ($splode as $address) {
             $cc[] = array('email'=>$address, 'type'=>'cc');
