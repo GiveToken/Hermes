@@ -125,7 +125,7 @@ body {
           $('#send-form').css('margin-bottom','500px');
           window.scrollTo(0, 0);
         } else {
-          message = data.data.error ==! undefined ? data.data.error : 'All fields required!';
+          message = (typeof data.data.error !== undefined) ? data.data.error : 'All fields required!';
           alert(message);
         }
       }, 'json');

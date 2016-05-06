@@ -33,46 +33,47 @@ if (logged_in()) {
             $imageFile = $token->screenshot();
             if ($imageFile) {
                 $message .= '<a href="'.APP_URL.'token/recruiting/'.$token->long_id.'">';
-                //$message .= '<img src="'.APP_URL.'uploads/'.str_replace(' ', '%20', $imageFile).'" width=700 />';
                 $message .= '<img src="cid:screenshot" width=700 />';
                 $message .= '</a>';
                 $ipath = APP_URL.'uploads/'.str_replace(' ', '%20', $imageFile);
                 $itype = pathinfo($ipath, PATHINFO_EXTENSION);
                 $idata = file_get_contents($ipath);
-                //$base64 = 'data:image/' . $itype . ';base64,' . base64_encode($idata);
                 $base64 = base64_encode($idata);
                 $images = array(array(
                     'type' => 'image/png', // screenshots from Robbie are always png
                     'name' => 'screenshot',
                     'content' => $base64
                 ));
+
+                $message .='<br /><br />Share on ';
+                $encodedLink = urlencode(APP_URL.'token/recruiting/'.$token->long_id.'?source=linkedin');
+                $linkedInUrl = 'https://www.linkedin.com/shareArticle?mini=true&url='.$encodedLink;
+                $linkedInUrl .= '&title='.urlencode($token->job_title).'&summary='.urlencode(HTML::from($token->job_description));
+                if ($imageFile) {
+                    $linkedInUrl .= '&source='.APP_URL.'uploads/'.str_replace(' ', '%20', $imageFile);
+                }
+                $message .=' <a href="'.$linkedInUrl.'">LinkedIn</a>,';
+                $encodedLink = urlencode(APP_URL.'token/recruiting/'.$token->long_id.'?source=twitter');
+                $message .=' <a href="https://twitter.com/home?status='.urlencode($token->job_title).'%20'.$encodedLink.'">Twitter</a>';
+                $encodedLink = urlencode(APP_URL.'token/recruiting/'.$token->long_id.'?source=facebook');
+                $message .=' or <a href="https://www.facebook.com/sharer/sharer.php?u='.$encodedLink.'">Facebook</a>.';
+                $message .='<br /><br />';
+                $email_message = str_replace('{{message}}', $message, $email_message);
+                $mandrill = new MandrillEmail();
+                $mandrill->send(
+                    array(
+                        'to'=>array_merge(array(array('email'=>$user->email_address)), $cc),
+                        'from_email'=>'token@gosizzle.io',
+                        'from_name'=>'S!zzle',
+                        'subject'=>$subject,
+                        'html'=>$email_message,
+                        'images'=>$images
+                    )
+                );
+                $success = 'true';
+            } else {
+                $data['error'] = 'Failed to find screenshot for token';
             }
-            $message .='<br /><br />Share on ';
-            $encodedLink = urlencode(APP_URL.'token/recruiting/'.$token->long_id.'?source=linkedin');
-            $linkedInUrl = 'https://www.linkedin.com/shareArticle?mini=true&url='.$encodedLink;
-            $linkedInUrl .= '&title='.urlencode($token->job_title).'&summary='.urlencode(HTML::from($token->job_description));
-            if ($imageFile) {
-                $linkedInUrl .= '&source='.APP_URL.'uploads/'.str_replace(' ', '%20', $imageFile);
-            }
-            $message .=' <a href="'.$linkedInUrl.'">LinkedIn</a>,';
-            $encodedLink = urlencode(APP_URL.'token/recruiting/'.$token->long_id.'?source=twitter');
-            $message .=' <a href="https://twitter.com/home?status='.urlencode($token->job_title).'%20'.$encodedLink.'">Twitter</a>';
-            $encodedLink = urlencode(APP_URL.'token/recruiting/'.$token->long_id.'?source=facebook');
-            $message .=' or <a href="https://www.facebook.com/sharer/sharer.php?u='.$encodedLink.'">Facebook</a>.';
-            $message .='<br /><br />';
-            $email_message = str_replace('{{message}}', $message, $email_message);
-            $mandrill = new MandrillEmail();
-            $mandrill->send(
-                array(
-                    'to'=>array_merge(array(array('email'=>$user->email_address)), $cc),
-                    'from_email'=>'token@gosizzle.io',
-                    'from_name'=>'S!zzle',
-                    'subject'=>$subject,
-                    'html'=>$email_message,
-                    'images'=>$images
-                )
-            );
-            $success = 'true';
         } else {
             $data['error'] = 'Invalid user or token';
         }
