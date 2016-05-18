@@ -93,6 +93,12 @@ class Route
             case 'ajax':
                 include __DIR__.'/../ajax/route.php';
                 break;
+            case 'experiment':
+                include __DIR__.'/../experiment_info.php';
+                break;
+            case 'experiments':
+                include __DIR__.'/../experiments.php';
+                break;
             case 'invoice':
                 include __DIR__.'/../invoice.php';
                 break;
