@@ -30,6 +30,10 @@ require __DIR__.'/../header.php';
           <a href="https://www.github.com/GiveToken/Hermes">Hermes</a>
         </li>
         <li>
+          Experiments:
+          <a href="/experiments">All</a>
+        </li>
+        <li>
           Organizations:
           <a href="/admin/organizations">All</a>
         </li>
