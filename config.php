@@ -9,8 +9,8 @@ use Sizzle\Bacon\{
     Database\WebRequest
 };
 
-// set release version
-define('VERSION', '0.0.9');
+// set release version in /version file
+define('VERSION', trim(file_get_contents(__DIR__.'/version')));
 
 // autoload classes
 require_once __DIR__.'/src/autoload.php';
@@ -70,7 +70,17 @@ if (isset($_SERVER['HTTPS'])) {
         }
     }
 }
-$file_storage_path = 'uploads/';
+
+if (file_exists(__DIR__.'/../Giftbox/public/uploads')) {
+  // development
+  $file_storage_path = __DIR__.'/../Giftbox/public/uploads/';
+} elseif (file_exists(__DIR__.'/../gosizzle.io/public/uploads')) {
+  //production
+  $file_storage_path = __DIR__.'/../gosizzle.io/public/uploads/';
+} else {
+  // mnimalist development?
+  $file_storage_path = 'uploads/';
+}
 
 if (!defined('STRIPE_SECRET_KEY')) {
     define('STRIPE_SECRET_KEY', $stripe_secret_key);

@@ -1,5 +1,4 @@
 <?php
-
 $success = 'false';
 $data = '';
 $errors = [];
