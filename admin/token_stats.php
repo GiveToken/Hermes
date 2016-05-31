@@ -51,9 +51,9 @@ body {
                     user.email_address, user.first_name, user.last_name, user.id user_id
                     FROM user, recruiting_token
                     LEFT JOIN
-                    (SELECT id, SUBSTR(uri, LOCATE('get/', uri)+4) long_id
+                    (SELECT id, SUBSTR(uri, LOCATE('recruiting/', uri)+11) long_id
                      FROM web_request
-                     WHERE uri LIKE '/ajax/recruiting_token/get/%'
+                     WHERE uri LIKE '/token/recruiting/%'
                      AND web_request.user_id IS NULL
                     ) AS web_request
                     ON web_request.long_id = recruiting_token.long_id
