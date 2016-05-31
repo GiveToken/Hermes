@@ -98,7 +98,7 @@ body {
       </table>
     </div>
   </div>
-    <?php require __DIR__.'/../footer.php';?>
+  <?php require __DIR__.'/../footer.php';?>
   <script type="text/javascript" src="https://cdn.datatables.net/s/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.10,b-1.1.0,b-flash-1.1.0,b-html5-1.1.0,b-print-1.1.0/datatables.min.js"></script>
   <script>
   $(document).ready(function() {
