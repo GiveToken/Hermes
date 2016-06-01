@@ -36,11 +36,12 @@ require __DIR__.'/../header.php';
         <li>
           Organizations:
           <a href="/admin/organizations">All</a> •
-          <a href="/admin/organizations">Growth</a>
+          <a href="/report/org_growth">Growth</a>
         </li>
         <li>
           Reports:
-          <a href="/report/response_rate">Response Rate</a>
+          <a href="/report/response_rate">Response Rate</a> •
+          <a href="/report/org_growth">Customer Growth</a>
         </li>
         <li>
           Tokens:

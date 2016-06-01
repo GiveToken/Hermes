@@ -14,25 +14,26 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     public function organizationGrowth()
     {
         return $this->execute_query("SELECT yr, wk,
-          COUNT(DISTINCT organization_id) as active_organizations
-          FROM user,
-          (
-          (SELECT user_id, YEAR(created) as yr, WEEK(created) as wk
-          FROM web_request
-          WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
-          GROUP BY YEAR(created), WEEK(created), user_id)
-          UNION
-          (SELECT recruiting_token.user_id,
-          YEAR(web_request.created) as yr,
-          WEEK(web_request.created) as wk
-          FROM web_request, recruiting_token
-          WHERE web_request.user_id IS NULL
-          AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
-          AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id,'%')
-          GROUP BY YEAR(web_request.created), WEEK(web_request.created), recruiting_token.user_id)
-          ) as t3
-          WHERE user.id = t3.user_id
-          GROUP BY yr, wk"
+            STR_TO_DATE(CONCAT(yr,wk,' Sunday'), '%X%V %W') as `Week Starting`,
+            COUNT(DISTINCT organization_id) as active_organizations
+            FROM user,
+            (
+            (SELECT user_id, YEAR(created) as yr, WEEK(created) as wk
+            FROM web_request
+            WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+            GROUP BY YEAR(created), WEEK(created), user_id)
+            UNION
+            (SELECT recruiting_token.user_id,
+            YEAR(web_request.created) as yr,
+            WEEK(web_request.created) as wk
+            FROM web_request, recruiting_token
+            WHERE web_request.user_id IS NULL
+            AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+            AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id,'%')
+            GROUP BY YEAR(web_request.created), WEEK(web_request.created), recruiting_token.user_id)
+            ) as t3
+            WHERE user.id = t3.user_id
+            GROUP BY yr, wk"
         )->fetch_all(MYSQLI_ASSOC);
     }
 

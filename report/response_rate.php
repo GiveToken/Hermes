@@ -40,13 +40,6 @@ body {
   color: black;
   text-align: left;
 }
-.greyed {
-  background-color: lightgrey;
-  font-style: normal;
-}
-canvas {
-  height:400px;
-}
 </style>
 </head>
 <body id="visitors">
@@ -57,6 +50,10 @@ canvas {
     <div class="col-sm-offset-1 col-sm-10">
       <h1>Response Rates</h1>
       <canvas id="myChart" width="1000" height="400"></canvas>
+      <p>
+        * Not counting views from IPs matching an IP a user has used, or responses
+        to test or user email addresses
+      </p>
     </div>
   </div>
   <?php require __DIR__.'/../footer.php';?>
