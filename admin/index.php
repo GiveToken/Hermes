@@ -41,7 +41,8 @@ require __DIR__.'/../header.php';
         <li>
           Reports:
           <a href="/report/response_rate">Response Rate</a> •
-          <a href="/report/org_growth">Customer Growth</a>
+          <a href="/report/org_growth">Customer Growth</a> •
+          <a href="/report/usage_growth">Usage Growth</a>
         </li>
         <li>
           Tokens:

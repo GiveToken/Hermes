@@ -84,6 +84,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     public function usageGrowth()
     {
         return $this->execute_query("SELECT views.yr, views.wk,
+            STR_TO_DATE(CONCAT(views.yr,views.wk,' Sunday'), '%X%V %W') as `Week Starting`,
             COALESCE(`Nonuser Token Views`, 0) as `Nonuser Token Views`,
             COALESCE(`Emails Sent`, 0) as `Emails Sent`
             FROM
