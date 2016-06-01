@@ -121,6 +121,18 @@ class Route
             case 'queue':
                 include __DIR__.'/../queue.php';
                 break;
+            case 'report':
+                if (isset($this->endpointPieces[2]) && '' != $this->endpointPieces[2]) {
+                    switch ($this->endpointPieces[2]) {
+                    case 'response_rate':
+                        include __DIR__.'/../report/response_rate.php';
+                        break;
+                    default:
+                        include $this->default;
+
+                    }
+                }
+                break;
             case 'teapot':
                 include __DIR__.'/../teapot.php';
                 break;

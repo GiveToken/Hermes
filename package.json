@@ -29,5 +29,8 @@
     "json": "./node_modules/.bin/gulp json",
     "test": "cd js && ../node_modules/.bin/mocha --require test/bootstrap.js test"
   },
-  "author": ""
+  "author": "",
+  "dependencies": {
+    "chart.js": "^2.1.4"
+  }
 }

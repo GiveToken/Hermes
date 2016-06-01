@@ -47,6 +47,7 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/js', false, 301));
         $this->assertTrue($this->checkStatusCode('/js/', false, 404));
         $this->assertTrue($this->checkStatusCode('/organization', false, 302));
+        $this->assertTrue($this->checkStatusCode('/report/response_rate', false, 302));
         $this->assertTrue($this->checkStatusCode('/robots.txt'));
         $this->assertTrue($this->checkStatusCode('/teapot', false, 418));
         $this->assertTrue($this->checkStatusCode('/tokens', false, 302));
@@ -93,6 +94,7 @@ extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->checkStatusCode('/js', true, 301, true));
         $this->assertTrue($this->checkStatusCode('/js/', true, 404, true));
         $this->assertTrue($this->checkStatusCode('/organization', true, 200, true));
+        $this->assertTrue($this->checkStatusCode('/report/response_rate', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/robots.txt', true, 200, true));
         $this->assertTrue($this->checkStatusCode('/teapot', true, 418, true));
         $this->assertTrue($this->checkStatusCode('/tokens', true, 200, true));
