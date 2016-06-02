@@ -35,7 +35,14 @@ require __DIR__.'/../header.php';
         </li>
         <li>
           Organizations:
-          <a href="/admin/organizations">All</a>
+          <a href="/admin/organizations">All</a> •
+          <a href="/report/org_growth">Active Growth</a> •
+          <a href="/report/inactive_organizations">Inactive</a>
+        </li>
+        <li>
+          Reports:
+          <a href="/report/response_rate">Response Rate</a> •
+          <a href="/report/usage_growth">Usage Growth</a>
         </li>
         <li>
           Tokens:
@@ -48,6 +55,7 @@ require __DIR__.'/../header.php';
         <li>
           Users:
           <a href="/admin/users">All</a> •
+          <a href="/report/user_growth">Active Growth</a> •
           <a href="/admin/create_account">Create Account</a> •
           <a href="/admin/stalled_new_customers">Stalled</a> •
           <a href="/admin/no_card_customers">Free Trial</a> •

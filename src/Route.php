@@ -121,6 +121,30 @@ class Route
             case 'queue':
                 include __DIR__.'/../queue.php';
                 break;
+            case 'report':
+                if (isset($this->endpointPieces[2]) && '' != $this->endpointPieces[2]) {
+                    switch ($this->endpointPieces[2]) {
+                    case 'inactive_organizations':
+                        include __DIR__.'/../report/inactive_organizations.php';
+                        break;
+                    case 'org_growth':
+                        include __DIR__.'/../report/org_growth.php';
+                        break;
+                    case 'response_rate':
+                        include __DIR__.'/../report/response_rate.php';
+                        break;
+                    case 'usage_growth':
+                        include __DIR__.'/../report/usage_growth.php';
+                        break;
+                    case 'user_growth':
+                        include __DIR__.'/../report/user_growth.php';
+                        break;
+                    default:
+                        include $this->default;
+
+                    }
+                }
+                break;
             case 'teapot':
                 include __DIR__.'/../teapot.php';
                 break;

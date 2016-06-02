@@ -29,6 +29,18 @@ if (!defined('ENVIRONMENT')) {
     define('ENVIRONMENT', 'hermes.gosizzle.io' == $server ? 'production' : ('127.0.0.1' == $_SERVER['SERVER_ADDR'] ? 'local' : 'development'));
 }
 
+// check IP whitelist
+if (ENVIRONMENT == 'production') {
+    $whitelist = [
+        '68.53.5.230',
+        '64.134.191.49',
+        '216.0.49.162',
+        '23.24.238.222'
+    ];
+    if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+        header('Location: https://www.gosizzle.io');
+    }
+}
 
 // setup Monolog error handler to report to Slack
 // this causes a 500 error on AWS (is PHP 7 issue?)

@@ -50,14 +50,4 @@
   /** TODO Move these into marketing.min build */
 ?>
   <script src="/js/login.min.js?v=<?php echo VERSION;?>"></script>
-<?php } elseif (isset($_SESSION['stripe_id'])) { ?>
-  <script>
-  $(document).ready(function() {
-    setTimeout(function () {
-      $('#upgrade-dropdown').hide();
-      $('#upgrade-divider').hide();
-    }, 500);
-  });
-  </script>
 <?php }?>
-<script src="https://checkout.stripe.com/checkout.js"></script>
