@@ -136,6 +136,9 @@ class Route
                     case 'usage_growth':
                         include __DIR__.'/../report/usage_growth.php';
                         break;
+                    case 'user_growth':
+                        include __DIR__.'/../report/user_growth.php';
+                        break;
                     default:
                         include $this->default;
 

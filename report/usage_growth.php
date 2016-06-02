@@ -21,11 +21,10 @@ $dataObj .= "datasets:[";
 $dataObj .= "{label:'Nonuser Token Views',data:[$tokenViews],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
 $dataObj .= "{label:'Emails Sent',data:[$emailsSent],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
 $dataObj .= ']}';
-//echo $dataObj; die;
 
 date_default_timezone_set('America/Chicago');
 
-define('TITLE', 'Repsonse Rate');
+define('TITLE', 'Usage Growth');
 require __DIR__.'/../header.php';
 ?>
 <style>
