@@ -120,4 +120,67 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
         return $this->execute_query(""
         )->fetch_all(MYSQLI_ASSOC);
     }
+
+    /**
+     * Gets info on inactive organizations
+     *
+     * @return array - an array of numbers
+     */
+    public function inactiveOrganizations()
+    {
+        return $this->execute_query("SELECT
+            weekly.id, weekly.`name`, weekly.created, weekly.paying_user,
+            COALESCE(monthly.inactive, weekly.inactive) AS inactive
+            FROM
+            (SELECT distinct organization.id, organization.`name`, organization.created, organization.paying_user, 'Week' AS inactive
+                FROM organization
+                WHERE organization.id NOT IN
+                (SELECT organization_id
+                    FROM user
+                    WHERE user.id IN (
+                        SELECT distinct user_id
+                        FROM web_request
+                        WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                        AND web_request.created > DATE_SUB(NOW(), INTERVAL 1 WEEK)
+                        AND user_id is not null
+                        UNION
+                        SELECT distinct recruiting_token.user_id
+                        FROM web_request, recruiting_token
+                        WHERE web_request.user_id IS NULL
+                        AND web_request.created > DATE_SUB(NOW(), INTERVAL 1 WEEK)
+                        AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                        AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id,'%')
+                    )
+                )
+                AND (organization.paying_user IS NOT NULL
+                    OR organization.created > DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                AND organization.id != 1
+            ) as weekly
+            LEFT JOIN (SELECT distinct organization.id, organization.`name`, organization.created, organization.paying_user, 'Month' AS inactive
+                FROM organization
+                WHERE organization.id NOT IN
+                (SELECT organization_id
+                    FROM user
+                    WHERE user.id IN (
+                        SELECT distinct user_id
+                        FROM web_request
+                        WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                        AND web_request.created > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                        AND user_id is not null
+                        UNION
+                        SELECT distinct recruiting_token.user_id
+                        FROM web_request, recruiting_token
+                        WHERE web_request.user_id IS NULL
+                        AND web_request.created > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                        AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                        AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id,'%')
+                    )
+                )
+                AND (organization.paying_user IS NOT NULL
+                    OR organization.created > DATE_SUB(NOW(), INTERVAL 1 MONTH))
+                AND organization.id != 1
+            ) AS monthly on weekly.id = monthly.id
+            ORDER BY inactive"
+        );//->fetch_all(MYSQLI_ASSOC);
+    }
 }

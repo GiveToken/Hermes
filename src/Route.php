@@ -124,6 +124,9 @@ class Route
             case 'report':
                 if (isset($this->endpointPieces[2]) && '' != $this->endpointPieces[2]) {
                     switch ($this->endpointPieces[2]) {
+                    case 'inactive_organizations':
+                        include __DIR__.'/../report/inactive_organizations.php';
+                        break;
                     case 'org_growth':
                         include __DIR__.'/../report/org_growth.php';
                         break;

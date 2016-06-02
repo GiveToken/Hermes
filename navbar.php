@@ -27,7 +27,7 @@
         <?php if (logged_in()) { ?>
             <li><a href="http://blog.gosizzle.io" class="external sizzle-nav-choice">Blog</a></li>
             <li><a href="/tokens" class="external sizzle-nav-choice">My Tokens</a></li>
-            <li><a href="/admin" class="external sizzle-nav-choice">Admin</a></li>
+            <li><a href="/admin" class="external sizzle-nav-choice">Menu</a></li>
             <li><a href="javascript:void(0)" class="sizzle-nav-choice" id="logout-button" onclick="logout();">Logout</a></li>
         <?php } else { ?>
             <li><a href="javascript:void(0)" onclick="loginOpen()" class="sizzle-nav-choice">Login</a></li>

@@ -36,7 +36,8 @@ require __DIR__.'/../header.php';
         <li>
           Organizations:
           <a href="/admin/organizations">All</a> •
-          <a href="/report/org_growth">Growth</a>
+          <a href="/report/org_growth">Growth</a> •
+          <a href="/report/inactive_organizations">Inactive</a>
         </li>
         <li>
           Reports:
