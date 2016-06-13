@@ -35,7 +35,8 @@ if (ENVIRONMENT == 'production') {
         '68.53.5.230',
         '64.134.191.49',
         '216.0.49.162',
-        '23.24.238.222'
+        '23.24.238.222',
+        '69.138.145.106'
     ];
     if (!in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
         header('Location: https://www.gosizzle.io');
