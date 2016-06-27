@@ -74,6 +74,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             WHERE web_request.user_id IS NULL
             AND web_request.uri LIKE '/token/recruiting/%'
             AND remote_ip NOT IN (SELECT remote_ip FROM web_request WHERE user_id IS NOT NULL)
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
             GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
             LEFT JOIN
             (SELECT SUM(IF(response = 'Yes',1,0)) as `Yeses`,
