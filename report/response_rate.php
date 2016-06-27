@@ -50,8 +50,8 @@ body {
       <h1>Response Rates</h1>
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
-        * Not counting views from IPs matching an IP a user has used, or responses
-        to test or user email addresses
+        * Not counting views from users, IPs matching an IP a user has used, or bots. Ignoring responses
+        to test or user email addresses.
       </p>
     </div>
   </div>

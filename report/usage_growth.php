@@ -18,7 +18,7 @@ foreach ($dates as $date) {
 $dataObj = '{';
 $dataObj .= "labels:[$labels],";
 $dataObj .= "datasets:[";
-$dataObj .= "{label:'Nonuser Token Views',data:[$tokenViews],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
+$dataObj .= "{label:'Token Views*',data:[$tokenViews],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
 $dataObj .= "{label:'Emails Sent',data:[$emailsSent],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
 $dataObj .= ']}';
 
@@ -50,6 +50,7 @@ body {
       </p>
     </div>
   </div>
+  * View count excludes logged in users and <a href="/bot_list">bots</a>.
   <?php require __DIR__.'/../footer.php';?>
   <script src="/js/Chart.min.js"></script>
   <script>

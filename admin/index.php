@@ -62,7 +62,8 @@ require __DIR__.'/../header.php';
           <a href="/admin/active_users">Recently Active</a>
         </li>
         <li>
-          <a href="/admin/visitors">Website Vistors</a>
+          <a href="/admin/visitors">Website Vistors</a> •
+          <a href="/bot_list">Bots</a>
         </li>
       </ul>
     </nav>

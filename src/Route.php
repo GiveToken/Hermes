@@ -96,6 +96,9 @@ class Route
             case 'experiment':
                 include __DIR__.'/../experiment_info.php';
                 break;
+            case 'bot_list':
+                include __DIR__.'/../bot_list.php';
+                break;
             case 'experiments':
                 include __DIR__.'/../experiments.php';
                 break;

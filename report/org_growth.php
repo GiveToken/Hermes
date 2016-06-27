@@ -9,14 +9,17 @@ $dates = (new Report())->organizationGrowth();
 array_pop($dates);
 $labels = '';
 $count = '';
+$paying = '';
 foreach ($dates as $date) {
   $labels .= "'".$date['Week Starting']."',";
   $count .= $date['active_organizations'].',';
+  $paying .= $date['paying'].',';
 }
 $dataObj = '{';
 $dataObj .= "labels:[$labels],";
 $dataObj .= "datasets:[";
 $dataObj .= "{label:'Active Organizations',data:[$count],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
+$dataObj .= "{label:'Paying Organizations',data:[$paying],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(250,128,114,1)',pointRadius:0},";
 $dataObj .= ']}';
 
 date_default_timezone_set('America/Chicago');

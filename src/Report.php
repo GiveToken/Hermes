@@ -13,7 +13,8 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
      */
     public function organizationGrowth()
     {
-        return $this->execute_query("SELECT yr, wk,
+        return $this->execute_query("SELECT t4.*, t5.paying FROM
+            (SELECT yr, wk,
             STR_TO_DATE(CONCAT(yr,wk,' Sunday'), '%X%V %W') as `Week Starting`,
             COUNT(DISTINCT organization_id) as active_organizations
             FROM user,
@@ -33,7 +34,21 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             GROUP BY YEAR(web_request.created), WEEK(web_request.created), recruiting_token.user_id)
             ) as t3
             WHERE user.id = t3.user_id
-            GROUP BY yr, wk"
+            GROUP BY yr, wk) AS t4
+            LEFT JOIN
+            (SELECT SUM(IF(started <= STR_TO_DATE(CONCAT(yr,wk,' Sunday'), '%X%V %W')
+              AND (ended IS NULL OR ended > STR_TO_DATE(CONCAT(yr,wk,' Saturday'), '%X%V %W'))
+              ,1,0)) AS paying, yr, wk
+            FROM paying_organization,
+            (SELECT YEAR(web_request.created) as yr,
+            WEEK(web_request.created) as wk
+            FROM
+            web_request
+            GROUP BY YEAR(web_request.created), WEEK(web_request.created)) web_request
+            GROUP BY yr, wk
+            ) AS t5
+            ON t4.yr = t5.yr
+            AND t4.wk = t5.wk"
         )->fetch_all(MYSQLI_ASSOC);
     }
 
@@ -59,6 +74,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             WHERE web_request.user_id IS NULL
             AND web_request.uri LIKE '/token/recruiting/%'
             AND remote_ip NOT IN (SELECT remote_ip FROM web_request WHERE user_id IS NOT NULL)
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
             GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
             LEFT JOIN
             (SELECT SUM(IF(response = 'Yes',1,0)) as `Yeses`,
@@ -94,6 +110,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             FROM web_request
             WHERE web_request.user_id IS NULL
             AND web_request.uri LIKE '/token/recruiting/%'
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
             GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
             LEFT JOIN
             (SELECT COUNT(*) as `Emails Sent`,
