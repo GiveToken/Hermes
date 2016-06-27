@@ -94,6 +94,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             FROM web_request
             WHERE web_request.user_id IS NULL
             AND web_request.uri LIKE '/token/recruiting/%'
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
             GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
             LEFT JOIN
             (SELECT COUNT(*) as `Emails Sent`,
