@@ -37,7 +37,6 @@ if (ENVIRONMENT == 'production') {
         '216.0.49.162',
         '23.24.238.222',
         '69.138.145.106',
-        '75.136.114.8',
         '68.53.54.92'
     ];
     if (!in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
