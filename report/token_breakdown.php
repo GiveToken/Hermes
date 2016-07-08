@@ -32,7 +32,6 @@ switch ($breakdown) {
         $iphone = '';
         $android = '';
         $windows = '';
-        $bot = '';
         break;
     case 'browser':
         $dates = (new Report())->tokenBrowser();
@@ -41,7 +40,6 @@ switch ($breakdown) {
         $ie = '';
         $safari = '';
         $edge = '';
-        $bot = '';
         break;
 }
 array_pop($dates);
@@ -61,7 +59,6 @@ foreach ($dates as $date) {
             $iphone .= ('no' == $percent ? $date['iphone'] : round(100*$date['iphone']/$date['total'],2)).',';
             $android .= ('no' == $percent ? $date['android'] : round(100*$date['android']/$date['total'],2)).',';
             $windows .= ('no' == $percent ? $date['windows'] : round(100*$date['windows']/$date['total'],2)).',';
-            $bot .= ('no' == $percent ? $date['bot'] : round(100*$date['bot']/$date['total'],2)).',';
             break;
         case 'browser':
             $chrome .= ('no' == $percent ? $date['chrome'] : round(100*$date['chrome']/$date['total'],2)).',';
@@ -69,7 +66,6 @@ foreach ($dates as $date) {
             $ie .= ('no' == $percent ? $date['ie'] : round(100*$date['ie']/$date['total'],2)).',';
             $safari .= ('no' == $percent ? $date['safari'] : round(100*$date['safari']/$date['total'],2)).',';
             $edge .= ('no' == $percent ? $date['edge'] : round(100*$date['edge']/$date['total'],2)).',';
-            $bot .= ('no' == $percent ? $date['bot'] : round(100*$date['bot']/$date['total'],2)).',';
             break;
     }
 }
@@ -89,7 +85,6 @@ switch ($breakdown) {
         $dataObj .= "{label:'iPhone',data:[$iphone],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
         $dataObj .= "{label:'Android',data:[$android],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
         $dataObj .= "{label:'Windows',data:[$windows],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(100,100,100,100)',pointRadius:0},";
-        $dataObj .= "{label:'Bot',data:[$bot],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(5,150,86,200)',pointRadius:0},";
         break;
     case 'browser':
         $dataObj .= "{label:'Chrome',data:[$chrome],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
@@ -97,7 +92,6 @@ switch ($breakdown) {
         $dataObj .= "{label:'Internet Explorer',data:[$ie],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
         $dataObj .= "{label:'Safari',data:[$safari],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
         $dataObj .= "{label:'Edge',data:[$edge],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(100,100,100,100)',pointRadius:0},";
-        $dataObj .= "{label:'Bot',data:[$bot],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(5,150,86,200)',pointRadius:0},";
         break;
 }
 $dataObj .= ']}';
@@ -137,7 +131,7 @@ body {
       </p>
     </div>
   </div>
-  * View count excludes logged in users<?=($breakdown=='source' ? ' and <a href="/bot_list">bots</a>' :'')?>.
+  * View count excludes logged in users and <a href="/bot_list">bots</a>.
   <?php require __DIR__.'/../footer.php';?>
   <script src="/js/Chart.min.js"></script>
   <script>

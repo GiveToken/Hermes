@@ -256,11 +256,11 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             SUM(IF(user_agent LIKE '%iPhone OS%',1, 0)) as iphone,
             SUM(IF(user_agent LIKE '%Android%',1, 0)) as android,
             SUM(IF(user_agent LIKE '%Windows%',1, 0)) as windows,
-            SUM(IF(user_agent IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL),1, 0)) as bot,
             COUNT(*) total
             FROM giftbox.web_request
             WHERE uri LIKE '/token/recruiting%'
             AND web_request.user_id IS NULL
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
             GROUP BY `Week Starting`
             ORDER BY `Week Starting`"
         )->fetch_all(MYSQLI_ASSOC);
@@ -280,11 +280,11 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             SUM(IF(user_agent LIKE '%Trident%',1, 0)) as ie,
             SUM(IF(user_agent LIKE '%AppleWebKit%' AND user_agent NOT LIKE '%Chrome%' ,1, 0)) as safari,
             SUM(IF(user_agent LIKE '%Edge%',1, 0)) as edge,
-            SUM(IF(user_agent IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL),1, 0)) as bot,
             COUNT(*) total
             FROM giftbox.web_request
             WHERE uri LIKE '/token/recruiting%'
             AND user_id IS NULL
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
             GROUP BY `Week Starting`
             ORDER BY `Week Starting`"
         )->fetch_all(MYSQLI_ASSOC);
