@@ -136,6 +136,9 @@ class Route
                     case 'response_rate':
                         include __DIR__.'/../report/response_rate.php';
                         break;
+                    case 'token_breakdown':
+                        include __DIR__.'/../report/token_breakdown.php';
+                        break;
                     case 'usage_growth':
                         include __DIR__.'/../report/usage_growth.php';
                         break;

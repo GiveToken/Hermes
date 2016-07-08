@@ -218,4 +218,75 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             ORDER BY inactive"
         );//->fetch_all(MYSQLI_ASSOC);
     }
+
+    /**
+     * Gets token source numbers
+     *
+     * @return array - an array of numbers
+     */
+    public function TokenSource()
+    {
+        return $this->execute_query("SELECT
+            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+            SUM(IF(uri like '/token/recruiting%?source=twitter%',1,0)) Twitter,
+            SUM(IF(uri like '/token/recruiting%?source=facebook%',1,0)) Facebook,
+            SUM(IF(uri like '/token/recruiting%?source=linkedin%',1,0)) LinkedIn,
+            SUM(IF(uri not like '%?source=%',1,0)) Other,
+            COUNT(*) total
+            FROM web_request
+            WHERE uri LIKE '/token/recruiting%'
+            AND web_request.user_id IS NULL
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+            GROUP BY `Week Starting`
+            ORDER BY `Week Starting`;"
+        )->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
+     * Gets token source numbers
+     *
+     * @return array - an array of numbers
+     */
+    public function TokenOS()
+    {
+        return $this->execute_query("SELECT
+            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+            SUM(IF(user_agent LIKE '%Macintosh%',1, 0)) as osx,
+            SUM(IF(user_agent LIKE '%iPad%',1, 0)) as ipad,
+            SUM(IF(user_agent LIKE '%iPhone OS%',1, 0)) as iphone,
+            SUM(IF(user_agent LIKE '%Android%',1, 0)) as android,
+            SUM(IF(user_agent LIKE '%Windows%',1, 0)) as windows,
+            COUNT(*) total
+            FROM giftbox.web_request
+            WHERE uri LIKE '/token/recruiting%'
+            AND web_request.user_id IS NULL
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+            GROUP BY `Week Starting`
+            ORDER BY `Week Starting`"
+        )->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
+     * Gets token source numbers
+     *
+     * @return array - an array of numbers
+     */
+    public function TokenBrowser()
+    {
+        return $this->execute_query("SELECT
+            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+            SUM(IF(user_agent LIKE '%Chrome%' AND user_agent NOT LIKE '%Edge%',1, 0)) as chrome,
+            SUM(IF(user_agent LIKE '%Firefox%',1, 0)) as firefox,
+            SUM(IF(user_agent LIKE '%Trident%',1, 0)) as ie,
+            SUM(IF(user_agent LIKE '%AppleWebKit%' AND user_agent NOT LIKE '%Chrome%' ,1, 0)) as safari,
+            SUM(IF(user_agent LIKE '%Edge%',1, 0)) as edge,
+            COUNT(*) total
+            FROM giftbox.web_request
+            WHERE uri LIKE '/token/recruiting%'
+            AND user_id IS NULL
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+            GROUP BY `Week Starting`
+            ORDER BY `Week Starting`"
+        )->fetch_all(MYSQLI_ASSOC);
+    }
 }

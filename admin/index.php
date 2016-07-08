@@ -46,11 +46,11 @@ require __DIR__.'/../header.php';
         </li>
         <li>
           Tokens:
-          <a href="/admin/tokens">All</a> •
+          <a href="/admin/tokens">Listing</a> •
           <a href="<?=APP_URL?>create_recruiting">Create</a> •
           <a href="/admin/send_token">Send</a> •
           <a href="/admin/transfer_token">Transfer Ownership</a> •
-          <a href="/token_stats">Stats</a>
+          <a href="/report/token_breakdown">Stats</a>
         </li>
         <li>
           Users:
