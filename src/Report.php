@@ -224,7 +224,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
      *
      * @return array - an array of numbers
      */
-    public function TokenSource()
+    public function tokenSource()
     {
         return $this->execute_query("SELECT
             STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
@@ -243,11 +243,11 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     }
 
     /**
-     * Gets token source numbers
+     * Gets token os numbers
      *
      * @return array - an array of numbers
      */
-    public function TokenOS()
+    public function tokenOS()
     {
         return $this->execute_query("SELECT
             STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
@@ -267,11 +267,11 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     }
 
     /**
-     * Gets token source numbers
+     * Gets token browser numbers
      *
      * @return array - an array of numbers
      */
-    public function TokenBrowser()
+    public function tokenBrowser()
     {
         return $this->execute_query("SELECT
             STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
@@ -288,5 +288,40 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
             GROUP BY `Week Starting`
             ORDER BY `Week Starting`"
         )->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
+     * Gets token org numbers
+     *
+     * @return array - an array of numbers
+     */
+    public function tokenOrganization()
+    {
+        $raw = $this->execute_query("SELECT
+            STR_TO_DATE(CONCAT(YEAR(t0.created), WEEK(t0.created),' Sunday'), '%X%V %W') as `Week Starting`,
+            org_name,
+            COUNT(*) AS cnt
+            FROM
+            (SELECT * FROM web_request
+            WHERE uri LIKE '/token/recruiting%'
+            AND web_request.user_id IS NULL
+            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+            ) AS t0
+            JOIN
+            (SELECT recruiting_token.long_id, organization.`name` AS org_name
+            FROM recruiting_token, user, organization
+            WHERE recruiting_token.user_id = user.id
+            AND user.organization_id = organization.id
+            ) AS t1 on t0.`uri` LIKE CONCAT('%',t1.long_id,'%')
+            GROUP BY t1.org_name, `Week Starting`
+            ORDER BY `Week Starting`, cnt DESC;"
+        )->fetch_all(MYSQLI_ASSOC);
+        $return = array();
+        foreach ($raw as $row) {
+            $return[$row['Week Starting']]['Week Starting'] = $row['Week Starting'];
+            $return[$row['Week Starting']][$row['org_name']] = $row['cnt'];
+            $return[$row['Week Starting']]['total'] = $row['cnt'] + ($return[$row['Week Starting']]['total'] ?? 0);
+        }
+        return $return;
     }
 }

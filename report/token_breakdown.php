@@ -7,7 +7,7 @@ if (!logged_in()) {
 
 // what are we breaking down by
 $breakdown = strtolower($_GET['by'] ?? 'source');
-if (!in_array($breakdown, ['source', 'os', 'browser'])) {
+if (!in_array($breakdown, ['source', 'os', 'browser', 'organization'])) {
     $breakdown = 'source';
 }
 
@@ -41,6 +41,19 @@ switch ($breakdown) {
         $safari = '';
         $edge = '';
         break;
+    case 'organization':
+        $dates = (new Report())->tokenOrganization();
+        //echo '<pre>';print_r($dates);die;
+        $companies = array();
+        //initialize all companies with token views
+        foreach ($dates as $date) {
+            foreach ($date as $ndx => $val) {
+                if (!in_array($ndx, ['Week Starting', 'total'])) {
+                    $companies[$ndx] = '';
+                }
+            }
+        }
+        break;
 }
 array_pop($dates);
 $labels = '';
@@ -67,8 +80,14 @@ foreach ($dates as $date) {
             $safari .= ('no' == $percent ? $date['safari'] : round(100*$date['safari']/$date['total'],2)).',';
             $edge .= ('no' == $percent ? $date['edge'] : round(100*$date['edge']/$date['total'],2)).',';
             break;
+        case 'organization':
+            foreach ($companies as $company => &$data) {
+                $data .= ('no' == $percent ? ($date[$company] ?? '0') : round(100*($date[$company] ?? 0)/$date['total'],2)).',';
+            }
+            break;
     }
 }
+//echo '<pre>';print_r($companies);die;
 $dataObj = '{';
 $dataObj .= "labels:[$labels],";
 $dataObj .= "datasets:[";
@@ -92,6 +111,11 @@ switch ($breakdown) {
         $dataObj .= "{label:'Internet Explorer',data:[$ie],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
         $dataObj .= "{label:'Safari',data:[$safari],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
         $dataObj .= "{label:'Edge',data:[$edge],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(100,100,100,100)',pointRadius:0},";
+        break;
+    case 'organization':
+        foreach ($companies as $company => $data) {
+            $dataObj .= "{label:'".str_replace("'", "\'", $company)."',data:[{$data}],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(".rand(1,255).','.rand(1,255).','.rand(1,255).','.rand(1,255).")',pointRadius:0},";
+        }
         break;
 }
 $dataObj .= ']}';
@@ -122,6 +146,7 @@ body {
       <input id="breakdown-source" type="radio" name="breakdown" value="source" <?=($breakdown=='source' ? 'checked' :'')?>> By Source
       <input id="breakdown-os" type="radio" name="breakdown" value="os" <?=($breakdown=='os' ? 'checked' :'')?>> By OS
       <input id="breakdown-browser" type="radio" name="breakdown" value="browser" <?=($breakdown=='browser' ? 'checked' :'')?>> By Browser
+      <input id="breakdown-organization" type="radio" name="breakdown" value="organization" <?=($breakdown=='organization' ? 'checked' :'')?>> By Organization
       <br />
       <input id="percent-no" type="radio" name="percent" value="no" <?=($percent=='no' ? 'checked' :'')?>> By Number
       <input id="percent-yes" type="radio" name="percent" value="yes" <?=($percent=='yes' ? 'checked' :'')?>> By Percent
@@ -140,6 +165,7 @@ body {
       type: 'line',
       data: <?=$dataObj?>,
       options: {
+        <?= ($breakdown=='organization' ? 'legend: {display: false},' : '')?>
         responsive: false
       }
   });
