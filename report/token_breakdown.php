@@ -17,16 +17,18 @@ if (!in_array($percent, ['yes', 'no'])) {
     $percent = 'no';
 }
 
+$report = new Report();
+
 switch ($breakdown) {
     case 'source':
-        $dates = (new Report())->tokenSource();
+        $dates = $report->tokenSource();
         $twitter = '';
         $facebook = '';
         $linkedin = '';
         $other = '';
         break;
     case 'os':
-        $dates = (new Report())->tokenOS();
+        $dates = $report->tokenOS();
         $osx = '';
         $ipad = '';
         $iphone = '';
@@ -34,7 +36,7 @@ switch ($breakdown) {
         $windows = '';
         break;
     case 'browser':
-        $dates = (new Report())->tokenBrowser();
+        $dates = $report->tokenBrowser();
         $chrome = '';
         $firefox = '';
         $ie = '';
@@ -42,7 +44,7 @@ switch ($breakdown) {
         $edge = '';
         break;
     case 'organization':
-        $dates = (new Report())->tokenOrganization();
+        $dates = $report->tokenOrganization();
         //echo '<pre>';print_r($dates);die;
         $companies = array();
         //initialize all companies with token views
@@ -93,28 +95,28 @@ $dataObj .= "labels:[$labels],";
 $dataObj .= "datasets:[";
 switch ($breakdown) {
     case 'source':
-        $dataObj .= "{label:'Twitter',data:[$twitter],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
-        $dataObj .= "{label:'Facebook',data:[$facebook],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
-        $dataObj .= "{label:'LinkedIn',data:[$linkedin],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
-        $dataObj .= "{label:'Other',data:[$other],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
+        $dataObj .= "{label:'Twitter',data:[$twitter],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Facebook',data:[$facebook],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'LinkedIn',data:[$linkedin],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Other',data:[$other],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
         break;
     case 'os':
-        $dataObj .= "{label:'OS X',data:[$osx],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
-        $dataObj .= "{label:'iPad',data:[$ipad],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
-        $dataObj .= "{label:'iPhone',data:[$iphone],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
-        $dataObj .= "{label:'Android',data:[$android],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
-        $dataObj .= "{label:'Windows',data:[$windows],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(100,100,100,100)',pointRadius:0},";
+        $dataObj .= "{label:'OS X',data:[$osx],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'iPad',data:[$ipad],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'iPhone',data:[$iphone],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Android',data:[$android],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Windows',data:[$windows],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
         break;
     case 'browser':
-        $dataObj .= "{label:'Chrome',data:[$chrome],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
-        $dataObj .= "{label:'Firefox',data:[$firefox],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
-        $dataObj .= "{label:'Internet Explorer',data:[$ie],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
-        $dataObj .= "{label:'Safari',data:[$safari],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
-        $dataObj .= "{label:'Edge',data:[$edge],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(100,100,100,100)',pointRadius:0},";
+        $dataObj .= "{label:'Chrome',data:[$chrome],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Firefox',data:[$firefox],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Internet Explorer',data:[$ie],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Safari',data:[$safari],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Edge',data:[$edge],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
         break;
     case 'organization':
         foreach ($companies as $company => $data) {
-            $dataObj .= "{label:'".str_replace("'", "\'", $company)."',data:[{$data}],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(".rand(1,255).','.rand(1,255).','.rand(1,255).','.rand(1,255).")',pointRadius:0},";
+            $dataObj .= "{label:'".str_replace("'", "\'", $company)."',data:[{$data}],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
         }
         break;
 }

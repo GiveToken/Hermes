@@ -324,4 +324,14 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
         }
         return $return;
     }
+
+    /**
+     * Gets a random color
+     *
+     * @return string - random rgb value
+     */
+    public function randRGBA()
+    {
+        return "rgba(".rand(1,255).','.rand(1,255).','.rand(1,255).','.rand(1,255).")";
+    }
 }
