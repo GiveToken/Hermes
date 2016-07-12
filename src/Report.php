@@ -9,47 +9,88 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     /**
      * Gets organization growth numbers
      *
+     * @param $type string - weekly (default) or monthly
+     *
      * @return array - an array of numbers
      */
-    public function organizationGrowth()
+    public function organizationGrowth(string $type = 'weekly')
     {
-        return $this->execute_query("SELECT t4.*, t5.paying FROM
-            (SELECT yr, wk,
-            STR_TO_DATE(CONCAT(yr,wk,' Sunday'), '%X%V %W') as `Week Starting`,
-            COUNT(DISTINCT organization_id) as active_organizations
-            FROM user,
-            (
-            (SELECT user_id, YEAR(created) as yr, WEEK(created) as wk
-            FROM web_request
-            WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
-            GROUP BY YEAR(created), WEEK(created), user_id)
-            UNION
-            (SELECT recruiting_token.user_id,
-            YEAR(web_request.created) as yr,
-            WEEK(web_request.created) as wk
-            FROM web_request, recruiting_token
-            WHERE web_request.user_id IS NULL
-            AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
-            AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id,'%')
-            GROUP BY YEAR(web_request.created), WEEK(web_request.created), recruiting_token.user_id)
-            ) as t3
-            WHERE user.id = t3.user_id
-            GROUP BY yr, wk) AS t4
-            LEFT JOIN
-            (SELECT SUM(IF(started <= STR_TO_DATE(CONCAT(yr,wk,' Sunday'), '%X%V %W')
-              AND (ended IS NULL OR ended > STR_TO_DATE(CONCAT(yr,wk,' Saturday'), '%X%V %W'))
-              ,1,0)) AS paying, yr, wk
-            FROM paying_organization,
-            (SELECT YEAR(web_request.created) as yr,
-            WEEK(web_request.created) as wk
-            FROM
-            web_request
-            GROUP BY YEAR(web_request.created), WEEK(web_request.created)) web_request
-            GROUP BY yr, wk
-            ) AS t5
-            ON t4.yr = t5.yr
-            AND t4.wk = t5.wk"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT t4.*, t5.paying FROM
+                (SELECT yr, mnth,
+                DATE_FORMAT(created, '%Y %M') AS `Month`,
+                COUNT(DISTINCT organization_id) as active_organizations
+                FROM user,
+                (
+                (SELECT user_id, YEAR(created) as yr, MONTH(created) as mnth
+                FROM web_request
+                WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                GROUP BY YEAR(created), MONTH(created), user_id)
+                UNION
+                (SELECT recruiting_token.user_id,
+                YEAR(web_request.created) as yr,
+                MONTH(web_request.created) as mnth
+                FROM web_request, recruiting_token
+                WHERE web_request.user_id IS NULL
+                AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id,'%')
+                GROUP BY YEAR(web_request.created), MONTH(web_request.created), recruiting_token.user_id)
+                ) as t3
+                WHERE user.id = t3.user_id
+                GROUP BY yr, mnth) AS t4
+                LEFT JOIN
+                (SELECT SUM(IF(started <= STR_TO_DATE(CONCAT(yr,mnth,' Sunday'), '%X%V %W')
+                  AND (ended IS NULL OR ended > STR_TO_DATE(CONCAT(yr,mnth,' Saturday'), '%X%V %W'))
+                  ,1,0)) AS paying, yr, mnth
+                FROM paying_organization,
+                (SELECT YEAR(web_request.created) as yr,
+                MONTH(web_request.created) as mnth
+                FROM
+                web_request
+                GROUP BY YEAR(web_request.created), MONTH(web_request.created)) web_request
+                GROUP BY yr, mnth
+                ) AS t5
+                ON t4.yr = t5.yr
+                AND t4.mnth = t5.mnth";
+        } else {
+            $query = "SELECT t4.*, t5.paying FROM
+                (SELECT yr, wk,
+                STR_TO_DATE(CONCAT(yr,wk,' Sunday'), '%X%V %W') as `Week Starting`,
+                COUNT(DISTINCT organization_id) as active_organizations
+                FROM user,
+                (
+                (SELECT user_id, YEAR(created) as yr, WEEK(created) as wk
+                FROM web_request
+                WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                GROUP BY YEAR(created), WEEK(created), user_id)
+                UNION
+                (SELECT recruiting_token.user_id,
+                YEAR(web_request.created) as yr,
+                WEEK(web_request.created) as wk
+                FROM web_request, recruiting_token
+                WHERE web_request.user_id IS NULL
+                AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
+                AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id,'%')
+                GROUP BY YEAR(web_request.created), WEEK(web_request.created), recruiting_token.user_id)
+                ) as t3
+                WHERE user.id = t3.user_id
+                GROUP BY yr, wk) AS t4
+                LEFT JOIN
+                (SELECT SUM(IF(started <= STR_TO_DATE(CONCAT(yr,wk,' Sunday'), '%X%V %W')
+                  AND (ended IS NULL OR ended > STR_TO_DATE(CONCAT(yr,wk,' Saturday'), '%X%V %W'))
+                  ,1,0)) AS paying, yr, wk
+                FROM paying_organization,
+                (SELECT YEAR(web_request.created) as yr,
+                WEEK(web_request.created) as wk
+                FROM
+                web_request
+                GROUP BY YEAR(web_request.created), WEEK(web_request.created)) web_request
+                GROUP BY yr, wk
+                ) AS t5
+                ON t4.yr = t5.yr
+                AND t4.wk = t5.wk";
+        }
+        return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
@@ -339,6 +380,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
      * Gets tokens created numbers
      *
      * @param $type string - weekly (default) or monthly
+     *
      * @return array - an array of numbers
      */
     public function tokensCreated(string $type = 'weekly')
@@ -349,7 +391,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
                 COUNT(*) tokens
                 FROM recruiting_token
                 WHERE user_id NOT IN (SELECT id FROM user WHERE organization_id = 1)
-                GROUP BY `Month`
+                GROUP BY YEAR(created), MONTH(created)
                 ORDER BY YEAR(created), MONTH(created)";
         } else {
             $query = "SELECT

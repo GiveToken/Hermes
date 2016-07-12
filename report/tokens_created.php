@@ -5,7 +5,10 @@ if (!logged_in()) {
     header('Location: '.'/');
 }
 
-$period = strtolower($_GET['period']) ?? 'weekly';
+$period = strtolower($_GET['period'] ?? '');
+if (!in_array($period, ['weekly', 'monthly'])) {
+    $period = 'weekly';
+}
 
 $dates = (new Report())->tokensCreated($period);
 array_pop($dates);
