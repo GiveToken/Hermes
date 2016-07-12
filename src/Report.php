@@ -356,105 +356,192 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     /**
      * Gets token source numbers
      *
+     * @param $type string - weekly (default) or monthly
+     *
      * @return array - an array of numbers
      */
-    public function tokenSource()
+    public function tokenSource(string $type = 'weekly')
     {
-        return $this->execute_query("SELECT
-            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
-            SUM(IF(uri like '/token/recruiting%?source=twitter%',1,0)) Twitter,
-            SUM(IF(uri like '/token/recruiting%?source=facebook%',1,0)) Facebook,
-            SUM(IF(uri like '/token/recruiting%?source=linkedin%',1,0)) LinkedIn,
-            SUM(IF(uri not like '%?source=%',1,0)) Other,
-            COUNT(*) total
-            FROM web_request
-            WHERE uri LIKE '/token/recruiting%'
-            AND web_request.user_id IS NULL
-            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
-            GROUP BY `Week Starting`
-            ORDER BY `Week Starting`;"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT
+                DATE_FORMAT(created, '%Y %M') AS `Month`,
+                SUM(IF(uri like '/token/recruiting%?source=twitter%',1,0)) Twitter,
+                SUM(IF(uri like '/token/recruiting%?source=facebook%',1,0)) Facebook,
+                SUM(IF(uri like '/token/recruiting%?source=linkedin%',1,0)) LinkedIn,
+                SUM(IF(uri not like '%?source=%',1,0)) Other,
+                COUNT(*) total
+                FROM web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND web_request.user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY YEAR(created), MONTH(created)
+                ORDER BY YEAR(created), MONTH(created)";
+        } else {
+            $query = "SELECT
+                STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+                SUM(IF(uri like '/token/recruiting%?source=twitter%',1,0)) Twitter,
+                SUM(IF(uri like '/token/recruiting%?source=facebook%',1,0)) Facebook,
+                SUM(IF(uri like '/token/recruiting%?source=linkedin%',1,0)) LinkedIn,
+                SUM(IF(uri not like '%?source=%',1,0)) Other,
+                COUNT(*) total
+                FROM web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND web_request.user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY `Week Starting`
+                ORDER BY `Week Starting`";
+        }
+        return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
      * Gets token os numbers
      *
+     * @param $type string - weekly (default) or monthly
+     *
      * @return array - an array of numbers
      */
-    public function tokenOS()
+    public function tokenOS(string $type = 'weekly')
     {
-        return $this->execute_query("SELECT
-            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
-            SUM(IF(user_agent LIKE '%Macintosh%',1, 0)) as osx,
-            SUM(IF(user_agent LIKE '%iPad%',1, 0)) as ipad,
-            SUM(IF(user_agent LIKE '%iPhone OS%',1, 0)) as iphone,
-            SUM(IF(user_agent LIKE '%Android%',1, 0)) as android,
-            SUM(IF(user_agent LIKE '%Windows%',1, 0)) as windows,
-            COUNT(*) total
-            FROM giftbox.web_request
-            WHERE uri LIKE '/token/recruiting%'
-            AND web_request.user_id IS NULL
-            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
-            GROUP BY `Week Starting`
-            ORDER BY `Week Starting`"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT
+                DATE_FORMAT(created, '%Y %M') AS `Month`,
+                SUM(IF(user_agent LIKE '%Macintosh%',1, 0)) as osx,
+                SUM(IF(user_agent LIKE '%iPad%',1, 0)) as ipad,
+                SUM(IF(user_agent LIKE '%iPhone OS%',1, 0)) as iphone,
+                SUM(IF(user_agent LIKE '%Android%',1, 0)) as android,
+                SUM(IF(user_agent LIKE '%Windows%',1, 0)) as windows,
+                COUNT(*) total
+                FROM giftbox.web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND web_request.user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY YEAR(created), MONTH(created)
+                ORDER BY YEAR(created), MONTH(created)";
+        } else {
+            $query = "SELECT
+                STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+                SUM(IF(user_agent LIKE '%Macintosh%',1, 0)) as osx,
+                SUM(IF(user_agent LIKE '%iPad%',1, 0)) as ipad,
+                SUM(IF(user_agent LIKE '%iPhone OS%',1, 0)) as iphone,
+                SUM(IF(user_agent LIKE '%Android%',1, 0)) as android,
+                SUM(IF(user_agent LIKE '%Windows%',1, 0)) as windows,
+                COUNT(*) total
+                FROM giftbox.web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND web_request.user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY `Week Starting`
+                ORDER BY `Week Starting`";
+        }
+        return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
      * Gets token browser numbers
      *
+     * @param $type string - weekly (default) or monthly
+     *
      * @return array - an array of numbers
      */
-    public function tokenBrowser()
+    public function tokenBrowser(string $type = 'weekly')
     {
-        return $this->execute_query("SELECT
-            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
-            SUM(IF(user_agent LIKE '%Chrome%' AND user_agent NOT LIKE '%Edge%',1, 0)) as chrome,
-            SUM(IF(user_agent LIKE '%Firefox%',1, 0)) as firefox,
-            SUM(IF(user_agent LIKE '%Trident%',1, 0)) as ie,
-            SUM(IF(user_agent LIKE '%AppleWebKit%' AND user_agent NOT LIKE '%Chrome%' ,1, 0)) as safari,
-            SUM(IF(user_agent LIKE '%Edge%',1, 0)) as edge,
-            COUNT(*) total
-            FROM giftbox.web_request
-            WHERE uri LIKE '/token/recruiting%'
-            AND user_id IS NULL
-            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
-            GROUP BY `Week Starting`
-            ORDER BY `Week Starting`"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT
+                DATE_FORMAT(created, '%Y %M') AS `Month`,
+                SUM(IF(user_agent LIKE '%Chrome%' AND user_agent NOT LIKE '%Edge%',1, 0)) as chrome,
+                SUM(IF(user_agent LIKE '%Firefox%',1, 0)) as firefox,
+                SUM(IF(user_agent LIKE '%Trident%',1, 0)) as ie,
+                SUM(IF(user_agent LIKE '%AppleWebKit%' AND user_agent NOT LIKE '%Chrome%' ,1, 0)) as safari,
+                SUM(IF(user_agent LIKE '%Edge%',1, 0)) as edge,
+                COUNT(*) total
+                FROM giftbox.web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY YEAR(created), MONTH(created)
+                ORDER BY YEAR(created), MONTH(created)";
+        } else {
+            $query = "SELECT
+                STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+                SUM(IF(user_agent LIKE '%Chrome%' AND user_agent NOT LIKE '%Edge%',1, 0)) as chrome,
+                SUM(IF(user_agent LIKE '%Firefox%',1, 0)) as firefox,
+                SUM(IF(user_agent LIKE '%Trident%',1, 0)) as ie,
+                SUM(IF(user_agent LIKE '%AppleWebKit%' AND user_agent NOT LIKE '%Chrome%' ,1, 0)) as safari,
+                SUM(IF(user_agent LIKE '%Edge%',1, 0)) as edge,
+                COUNT(*) total
+                FROM giftbox.web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY `Week Starting`
+                ORDER BY `Week Starting`";
+        }
+        return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
      * Gets token org numbers
      *
+     * @param $type string - weekly (default) or monthly
+     *
      * @return array - an array of numbers
      */
-    public function tokenOrganization()
+    public function tokenOrganization(string $type = 'weekly')
     {
-        $raw = $this->execute_query("SELECT
-            STR_TO_DATE(CONCAT(YEAR(t0.created), WEEK(t0.created),' Sunday'), '%X%V %W') as `Week Starting`,
-            org_name,
-            COUNT(*) AS cnt
-            FROM
-            (SELECT * FROM web_request
-            WHERE uri LIKE '/token/recruiting%'
-            AND web_request.user_id IS NULL
-            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
-            ) AS t0
-            JOIN
-            (SELECT recruiting_token.long_id, organization.`name` AS org_name
-            FROM recruiting_token, user, organization
-            WHERE recruiting_token.user_id = user.id
-            AND user.organization_id = organization.id
-            ) AS t1 on t0.`uri` LIKE CONCAT('%',t1.long_id,'%')
-            GROUP BY t1.org_name, `Week Starting`
-            ORDER BY `Week Starting`, cnt DESC;"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT
+                DATE_FORMAT(t0.created, '%Y %M') AS `Month`,
+                org_name,
+                COUNT(*) AS cnt
+                FROM
+                (SELECT * FROM web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND web_request.user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                ) AS t0
+                JOIN
+                (SELECT recruiting_token.long_id, organization.`name` AS org_name
+                FROM recruiting_token, user, organization
+                WHERE recruiting_token.user_id = user.id
+                AND user.organization_id = organization.id
+                ) AS t1 on t0.`uri` LIKE CONCAT('%',t1.long_id,'%')
+                GROUP BY t1.org_name, YEAR(t0.created), MONTH(t0.created)
+                ORDER BY YEAR(t0.created), MONTH(t0.created), cnt DESC";
+        } else {
+            $query = "SELECT
+                STR_TO_DATE(CONCAT(YEAR(t0.created), WEEK(t0.created),' Sunday'), '%X%V %W') as `Week Starting`,
+                org_name,
+                COUNT(*) AS cnt
+                FROM
+                (SELECT * FROM web_request
+                WHERE uri LIKE '/token/recruiting%'
+                AND web_request.user_id IS NULL
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                ) AS t0
+                JOIN
+                (SELECT recruiting_token.long_id, organization.`name` AS org_name
+                FROM recruiting_token, user, organization
+                WHERE recruiting_token.user_id = user.id
+                AND user.organization_id = organization.id
+                ) AS t1 on t0.`uri` LIKE CONCAT('%',t1.long_id,'%')
+                GROUP BY t1.org_name, `Week Starting`
+                ORDER BY `Week Starting`, cnt DESC";
+        }
+        $raw = $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
         $return = array();
-        foreach ($raw as $row) {
-            $return[$row['Week Starting']]['Week Starting'] = $row['Week Starting'];
-            $return[$row['Week Starting']][$row['org_name']] = $row['cnt'];
-            $return[$row['Week Starting']]['total'] = $row['cnt'] + ($return[$row['Week Starting']]['total'] ?? 0);
+        if ('monthly' == $type) {
+            foreach ($raw as $row) {
+                $return[$row['Month']]['Month'] = $row['Month'];
+                $return[$row['Month']][$row['org_name']] = $row['cnt'];
+                $return[$row['Month']]['total'] = $row['cnt'] + ($return[$row['Month']]['total'] ?? 0);
+            }
+        } else {
+            foreach ($raw as $row) {
+                $return[$row['Week Starting']]['Week Starting'] = $row['Week Starting'];
+                $return[$row['Week Starting']][$row['org_name']] = $row['cnt'];
+                $return[$row['Week Starting']]['total'] = $row['cnt'] + ($return[$row['Week Starting']]['total'] ?? 0);
+            }
         }
         return $return;
     }

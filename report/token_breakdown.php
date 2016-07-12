@@ -17,18 +17,24 @@ if (!in_array($percent, ['yes', 'no'])) {
     $percent = 'no';
 }
 
+// monthly or weekly?
+$period = strtolower($_GET['period'] ?? '');
+if (!in_array($period, ['weekly', 'monthly'])) {
+    $period = 'weekly';
+}
+
 $report = new Report();
 
 switch ($breakdown) {
     case 'source':
-        $dates = $report->tokenSource();
+        $dates = $report->tokenSource($period);
         $twitter = '';
         $facebook = '';
         $linkedin = '';
         $other = '';
         break;
     case 'os':
-        $dates = $report->tokenOS();
+        $dates = $report->tokenOS($period);
         $osx = '';
         $ipad = '';
         $iphone = '';
@@ -36,7 +42,7 @@ switch ($breakdown) {
         $windows = '';
         break;
     case 'browser':
-        $dates = $report->tokenBrowser();
+        $dates = $report->tokenBrowser($period);
         $chrome = '';
         $firefox = '';
         $ie = '';
@@ -44,13 +50,12 @@ switch ($breakdown) {
         $edge = '';
         break;
     case 'organization':
-        $dates = $report->tokenOrganization();
-        //echo '<pre>';print_r($dates);die;
+        $dates = $report->tokenOrganization($period);
         $companies = array();
         //initialize all companies with token views
         foreach ($dates as $date) {
             foreach ($date as $ndx => $val) {
-                if (!in_array($ndx, ['Week Starting', 'total'])) {
+                if (!in_array($ndx, ['Month','Week Starting', 'total'])) {
                     $companies[$ndx] = '';
                 }
             }
@@ -60,7 +65,7 @@ switch ($breakdown) {
 array_pop($dates);
 $labels = '';
 foreach ($dates as $date) {
-    $labels .= "'".$date['Week Starting']."',";
+    $labels .= "'".($date['Week Starting'] ?? $date['Month'])."',";
     switch ($breakdown) {
         case 'source':
             $twitter .= ('no' == $percent ? $date['Twitter'] : round(100*$date['Twitter']/$date['total'],2)).',';
@@ -153,6 +158,9 @@ body {
       <input id="percent-no" type="radio" name="percent" value="no" <?=($percent=='no' ? 'checked' :'')?>> By Number
       <input id="percent-yes" type="radio" name="percent" value="yes" <?=($percent=='yes' ? 'checked' :'')?>> By Percent
       <br />
+      <input id="period-weekly" type="radio" name="period" value="weekly" <?=($period=='weekly' ? 'checked' :'')?>> Weekly
+      <input id="period-monthly" type="radio" name="period" value="monthly" <?=($period=='monthly' ? 'checked' :'')?>> Monthly
+      <br />
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
       </p>
@@ -172,10 +180,13 @@ body {
       }
   });
   $('input[type=radio][name=breakdown]').change(function() {
-      window.location = '/report/token_breakdown?by='+this.value+'&percent='+$('input[type=radio][name=percent]:checked').val();
+      window.location = '/report/token_breakdown?by='+this.value+'&percent='+$('input[type=radio][name=percent]:checked').val()+'&period='+$('input[type=radio][name=period]:checked').val();
   })
   $('input[type=radio][name=percent]').change(function() {
-      window.location = '/report/token_breakdown?by='+$('input[type=radio][name=breakdown]:checked').val()+'&percent='+this.value;
+      window.location = '/report/token_breakdown?by='+$('input[type=radio][name=breakdown]:checked').val()+'&percent='+this.value+'&period='+$('input[type=radio][name=period]:checked').val();
+  })
+  $('input[type=radio][name=period]').change(function() {
+      window.location = '/report/token_breakdown?by='+$('input[type=radio][name=breakdown]:checked').val()+'&percent='+$('input[type=radio][name=percent]:checked').val()+'&period='+this.value;
   })
   </script>
 </body>
