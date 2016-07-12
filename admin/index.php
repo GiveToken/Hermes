@@ -42,6 +42,7 @@ require __DIR__.'/../header.php';
         <li>
           Reports:
           <a href="/report/response_rate">Response Rate</a> •
+          <a href="/report/tokens_created">Tokens Created</a> •
           <a href="/report/usage_growth">Usage Growth</a>
         </li>
         <li>
@@ -50,7 +51,7 @@ require __DIR__.'/../header.php';
           <a href="<?=APP_URL?>create_recruiting">Create</a> •
           <a href="/admin/send_token">Send</a> •
           <a href="/admin/transfer_token">Transfer Ownership</a> •
-          <a href="/report/token_breakdown">Stats</a>
+          <a href="/report/token_breakdown">View Stats</a>
         </li>
         <li>
           Users:

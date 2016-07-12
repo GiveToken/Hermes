@@ -334,4 +334,21 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     {
         return "rgba(".rand(1,255).','.rand(1,255).','.rand(1,255).','.rand(1,255).")";
     }
+
+    /**
+     * Gets tokens created numbers
+     *
+     * @return array - an array of numbers
+     */
+    public function tokensCreated()
+    {
+        return $this->execute_query("SELECT
+            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+            COUNT(*) tokens
+            FROM recruiting_token
+            WHERE user_id NOT IN (SELECT id FROM user WHERE organization_id = 1)
+            GROUP BY `Week Starting`
+            ORDER BY `Week Starting`"
+        )->fetch_all(MYSQLI_ASSOC);
+    }
 }
