@@ -179,32 +179,61 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
      */
     public function usageGrowth(string $type = 'weekly')
     {
-        return $this->execute_query("SELECT views.yr, views.wk,
-            STR_TO_DATE(CONCAT(views.yr,views.wk,' Sunday'), '%X%V %W') as `Week Starting`,
-            COALESCE(`Nonuser Token Views`, 0) as `Nonuser Token Views`,
-            COALESCE(`Emails Sent`, 0) as `Emails Sent`
-            FROM
-            (SELECT COUNT(*) as `Nonuser Token Views`,
-            YEAR(web_request.created) as yr,
-            WEEK(web_request.created) as wk
-            FROM web_request
-            WHERE web_request.user_id IS NULL
-            AND web_request.uri LIKE '/token/recruiting/%'
-            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
-            GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
-            LEFT JOIN
-            (SELECT COUNT(*) as `Emails Sent`,
-            YEAR(email_sent.created) as yr,
-            WEEK(email_sent.created) as wk
-            FROM email_sent, email_credential, user
-            WHERE email_sent.email_credential_id = email_credential.id
-            AND email_credential.user_id = user.id
-            AND email_sent.success = 'Yes'
-            AND user.internal = 'N'
-            GROUP BY YEAR(email_sent.created), WEEK(email_sent.created)) as emails
-            ON views.yr = emails.yr AND views.wk = emails.wk
-            ORDER by views.yr, views.wk"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT views.yr, views.mnth,
+                `Month`,
+                COALESCE(`Nonuser Token Views`, 0) as `Nonuser Token Views`,
+                COALESCE(`Emails Sent`, 0) as `Emails Sent`
+                FROM
+                (SELECT COUNT(*) as `Nonuser Token Views`,
+                YEAR(web_request.created) as yr,
+                MONTH(web_request.created) as mnth,
+                DATE_FORMAT(created, '%Y %M') AS `Month`
+                FROM web_request
+                WHERE web_request.user_id IS NULL
+                AND web_request.uri LIKE '/token/recruiting/%'
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY YEAR(web_request.created), MONTH(web_request.created)) as views
+                LEFT JOIN
+                (SELECT COUNT(*) as `Emails Sent`,
+                YEAR(email_sent.created) as yr,
+                MONTH(email_sent.created) as mnth
+                FROM email_sent, email_credential, user
+                WHERE email_sent.email_credential_id = email_credential.id
+                AND email_credential.user_id = user.id
+                AND email_sent.success = 'Yes'
+                AND user.internal = 'N'
+                GROUP BY YEAR(email_sent.created), MONTH(email_sent.created)) as emails
+                ON views.yr = emails.yr AND views.mnth = emails.mnth
+                ORDER by views.yr, views.mnth";
+        } else {
+            $query = "SELECT views.yr, views.wk,
+                STR_TO_DATE(CONCAT(views.yr,views.wk,' Sunday'), '%X%V %W') as `Week Starting`,
+                COALESCE(`Nonuser Token Views`, 0) as `Nonuser Token Views`,
+                COALESCE(`Emails Sent`, 0) as `Emails Sent`
+                FROM
+                (SELECT COUNT(*) as `Nonuser Token Views`,
+                YEAR(web_request.created) as yr,
+                WEEK(web_request.created) as wk
+                FROM web_request
+                WHERE web_request.user_id IS NULL
+                AND web_request.uri LIKE '/token/recruiting/%'
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
+                LEFT JOIN
+                (SELECT COUNT(*) as `Emails Sent`,
+                YEAR(email_sent.created) as yr,
+                WEEK(email_sent.created) as wk
+                FROM email_sent, email_credential, user
+                WHERE email_sent.email_credential_id = email_credential.id
+                AND email_credential.user_id = user.id
+                AND email_sent.success = 'Yes'
+                AND user.internal = 'N'
+                GROUP BY YEAR(email_sent.created), WEEK(email_sent.created)) as emails
+                ON views.yr = emails.yr AND views.wk = emails.wk
+                ORDER by views.yr, views.wk";
+        }
+        return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
