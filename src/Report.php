@@ -96,41 +96,78 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     /**
      * Gets response rate numbers over time
      *
+     * @param $type string - weekly (default) or monthly
+     *
      * @return array - an array of numbers
      */
-    public function responseRate()
+    public function responseRate(string $type = 'weekly')
     {
-        return $this->execute_query("SELECT views.yr, views.wk,
-            STR_TO_DATE(CONCAT(views.yr,views.wk,' Sunday'), '%X%V %W') as `Week Starting`,
-            COALESCE(`Nonuser Token Views`, 0) as `Nonuser Token Views`,
-            100*COALESCE(`Yeses`, 0)/COALESCE(`Nonuser Token Views`, 0) as `Yes %`,
-            100*COALESCE(`Maybes`, 0)/COALESCE(`Nonuser Token Views`, 0) as `Maybe %`,
-            100*COALESCE(`Nos`, 0)/COALESCE(`Nonuser Token Views`, 0) as `No %`,
-            100*(COALESCE(`Yeses`, 0)+COALESCE(`Maybes`, 0)+COALESCE(`Nos`, 0))/COALESCE(`Nonuser Token Views`, 0) as `Overall %`
-            FROM
-            (SELECT COUNT(*) as `Nonuser Token Views`,
-            YEAR(web_request.created) as yr,
-            WEEK(web_request.created) as wk
-            FROM web_request
-            WHERE web_request.user_id IS NULL
-            AND web_request.uri LIKE '/token/recruiting/%'
-            AND remote_ip NOT IN (SELECT remote_ip FROM web_request WHERE user_id IS NOT NULL)
-            AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
-            GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
-            LEFT JOIN
-            (SELECT SUM(IF(response = 'Yes',1,0)) as `Yeses`,
-            SUM(IF(response = 'Maybe',1,0)) as `Maybes`,
-            SUM(IF(response = 'No',1,0)) as `Nos`,
-            YEAR(recruiting_token_response.created) as yr,
-            WEEK(recruiting_token_response.created) as wk
-            FROM recruiting_token_response
-            WHERE email NOT IN (SELECT email_address FROM user)
-            AND email NOT LIKE '%givetoken.com'
-            AND email NOT IN ('test@test.com', 'test@gmail.com')
-            GROUP BY YEAR(recruiting_token_response.created), WEEK(recruiting_token_response.created)) as reponses
-            ON views.yr = reponses.yr AND views.wk = reponses.wk
-            ORDER by views.yr, views.wk"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT views.yr, views.mnth,
+                `Month`,
+                COALESCE(`Nonuser Token Views`, 0) as `Nonuser Token Views`,
+                100*COALESCE(`Yeses`, 0)/COALESCE(`Nonuser Token Views`, 0) as `Yes %`,
+                100*COALESCE(`Maybes`, 0)/COALESCE(`Nonuser Token Views`, 0) as `Maybe %`,
+                100*COALESCE(`Nos`, 0)/COALESCE(`Nonuser Token Views`, 0) as `No %`,
+                100*(COALESCE(`Yeses`, 0)+COALESCE(`Maybes`, 0)+COALESCE(`Nos`, 0))/COALESCE(`Nonuser Token Views`, 0) as `Overall %`
+                FROM
+                (SELECT COUNT(*) as `Nonuser Token Views`,
+                YEAR(web_request.created) as yr,
+                MONTH(web_request.created) as mnth,
+                DATE_FORMAT(web_request.created, '%Y %M') AS `Month`
+                FROM web_request
+                WHERE web_request.user_id IS NULL
+                AND web_request.uri LIKE '/token/recruiting/%'
+                AND remote_ip NOT IN (SELECT remote_ip FROM web_request WHERE user_id IS NOT NULL)
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                AND web_request.created > '2016-01-01'
+                GROUP BY YEAR(web_request.created), MONTH(web_request.created)) as views
+                LEFT JOIN
+                (SELECT SUM(IF(response = 'Yes',1,0)) as `Yeses`,
+                SUM(IF(response = 'Maybe',1,0)) as `Maybes`,
+                SUM(IF(response = 'No',1,0)) as `Nos`,
+                YEAR(recruiting_token_response.created) as yr,
+                MONTH(recruiting_token_response.created) as mnth
+                FROM recruiting_token_response
+                WHERE email NOT IN (SELECT email_address FROM user)
+                AND email NOT LIKE '%givetoken.com'
+                AND email NOT IN ('test@test.com', 'test@gmail.com')
+                GROUP BY YEAR(recruiting_token_response.created), MONTH(recruiting_token_response.created)) as reponses
+                ON views.yr = reponses.yr AND views.mnth = reponses.mnth
+                ORDER by views.yr, views.mnth";
+        } else {
+            $query = "SELECT views.yr, views.wk,
+                STR_TO_DATE(CONCAT(views.yr,views.wk,' Sunday'), '%X%V %W') as `Week Starting`,
+                COALESCE(`Nonuser Token Views`, 0) as `Nonuser Token Views`,
+                100*COALESCE(`Yeses`, 0)/COALESCE(`Nonuser Token Views`, 0) as `Yes %`,
+                100*COALESCE(`Maybes`, 0)/COALESCE(`Nonuser Token Views`, 0) as `Maybe %`,
+                100*COALESCE(`Nos`, 0)/COALESCE(`Nonuser Token Views`, 0) as `No %`,
+                100*(COALESCE(`Yeses`, 0)+COALESCE(`Maybes`, 0)+COALESCE(`Nos`, 0))/COALESCE(`Nonuser Token Views`, 0) as `Overall %`
+                FROM
+                (SELECT COUNT(*) as `Nonuser Token Views`,
+                YEAR(web_request.created) as yr,
+                WEEK(web_request.created) as wk
+                FROM web_request
+                WHERE web_request.user_id IS NULL
+                AND web_request.uri LIKE '/token/recruiting/%'
+                AND remote_ip NOT IN (SELECT remote_ip FROM web_request WHERE user_id IS NOT NULL)
+                AND user_agent NOT IN (SELECT user_agent FROM bot_user_agent WHERE deleted IS NULL)
+                GROUP BY YEAR(web_request.created), WEEK(web_request.created)) as views
+                LEFT JOIN
+                (SELECT SUM(IF(response = 'Yes',1,0)) as `Yeses`,
+                SUM(IF(response = 'Maybe',1,0)) as `Maybes`,
+                SUM(IF(response = 'No',1,0)) as `Nos`,
+                YEAR(recruiting_token_response.created) as yr,
+                WEEK(recruiting_token_response.created) as wk
+                FROM recruiting_token_response
+                WHERE email NOT IN (SELECT email_address FROM user)
+                AND email NOT LIKE '%givetoken.com'
+                AND email NOT IN ('test@test.com', 'test@gmail.com')
+                GROUP BY YEAR(recruiting_token_response.created), WEEK(recruiting_token_response.created)) as reponses
+                ON views.yr = reponses.yr AND views.wk = reponses.wk
+                ORDER by views.yr, views.wk";
+        }
+        return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
     /**

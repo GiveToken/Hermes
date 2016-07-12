@@ -5,14 +5,19 @@ if (!logged_in()) {
     header('Location: '.'/');
 }
 
-$rates = (new Report())->responseRate();
+$period = strtolower($_GET['period'] ?? '');
+if (!in_array($period, ['weekly', 'monthly'])) {
+    $period = 'weekly';
+}
+
+$rates = (new Report())->responseRate($period);
 array_pop($rates);
 $labels = '';
 $yes = '';
 $no = '';
 $maybe = '';
 foreach ($rates as $rate) {
-  $labels .= "'".$rate['Week Starting']."',";
+  $labels .= "'".($rate['Week Starting'] ?? $rate['Month'])."',";
   $yes .= $rate['Yes %'].',';
   $maybe .= ($rate['Yes %']+$rate['Maybe %']).',';
   $no .= ($rate['Yes %']+$rate['No %']+$rate['Maybe %']).',';
@@ -48,6 +53,9 @@ body {
   <div class="row" id="org-info">
     <div class="col-sm-offset-1 col-sm-10">
       <h1>Response Rates</h1>
+      <input id="period-weekly" type="radio" name="period" value="weekly" <?=($period=='weekly' ? 'checked' :'')?>> Weekly
+      <input id="period-monthly" type="radio" name="period" value="monthly" <?=($period=='monthly' ? 'checked' :'')?>> Monthly
+      <br />
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
         * Not counting views from users, IPs matching an IP a user has used, or bots. Ignoring responses
@@ -66,6 +74,9 @@ body {
         responsive: false
       }
   });
+  $('input[type=radio][name=period]').change(function() {
+      window.location = '/report/response_rate?period='+this.value;
+  })
   </script>
 </body>
 </html>
