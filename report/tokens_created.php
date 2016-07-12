@@ -5,12 +5,14 @@ if (!logged_in()) {
     header('Location: '.'/');
 }
 
-$dates = (new Report())->tokensCreated();
+$period = strtolower($_GET['period']) ?? 'weekly';
+
+$dates = (new Report())->tokensCreated($period);
 array_pop($dates);
 $labels = '';
 $count = '';
 foreach ($dates as $date) {
-  $labels .= "'".$date['Week Starting']."',";
+  $labels .= "'".($date['Week Starting'] ?? $date['Month'])."',";
   $count .= $date['tokens'].',';
 }
 $dataObj = '{';
@@ -42,6 +44,9 @@ body {
   <div class="row" id="org-info">
     <div class="col-sm-offset-1 col-sm-10">
       <h1>Tokens Created</h1>
+      <input id="period-weekly" type="radio" name="period" value="weekly" <?=($period=='weekly' ? 'checked' :'')?>> Weekly
+      <input id="period-monthly" type="radio" name="period" value="monthly" <?=($period=='monthly' ? 'checked' :'')?>> Monthly
+      <br />
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
         * Includes only tokens owned by non-S!zzle users.
@@ -59,6 +64,9 @@ body {
         responsive: false
       }
   });
+  $('input[type=radio][name=period]').change(function() {
+      window.location = '/report/tokens_created?period='+this.value;
+  })
   </script>
 </body>
 </html>

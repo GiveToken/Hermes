@@ -338,17 +338,28 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     /**
      * Gets tokens created numbers
      *
+     * @param $type string - weekly (default) or monthly
      * @return array - an array of numbers
      */
-    public function tokensCreated()
+    public function tokensCreated(string $type = 'weekly')
     {
-        return $this->execute_query("SELECT
-            STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
-            COUNT(*) tokens
-            FROM recruiting_token
-            WHERE user_id NOT IN (SELECT id FROM user WHERE organization_id = 1)
-            GROUP BY `Week Starting`
-            ORDER BY `Week Starting`"
-        )->fetch_all(MYSQLI_ASSOC);
+        if ('monthly' == $type) {
+            $query = "SELECT
+                DATE_FORMAT(created, '%Y %M') AS `Month`,
+                COUNT(*) tokens
+                FROM recruiting_token
+                WHERE user_id NOT IN (SELECT id FROM user WHERE organization_id = 1)
+                GROUP BY `Month`
+                ORDER BY YEAR(created), MONTH(created)";
+        } else {
+            $query = "SELECT
+                STR_TO_DATE(CONCAT(YEAR(created), WEEK(created),' Sunday'), '%X%V %W') as `Week Starting`,
+                COUNT(*) tokens
+                FROM recruiting_token
+                WHERE user_id NOT IN (SELECT id FROM user WHERE organization_id = 1)
+                GROUP BY `Week Starting`
+                ORDER BY `Week Starting`";
+        }
+        return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
 }
