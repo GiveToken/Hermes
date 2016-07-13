@@ -584,4 +584,43 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
         }
         return $this->execute_query($query)->fetch_all(MYSQLI_ASSOC);
     }
+
+    /**
+     * Gets user cohort activity numbers
+     *
+     * @return array - an array of numbers
+     */
+    public function userCohorts()
+    {
+        return $this->execute_query("SELECT DATE_FORMAT(user.created, '%M %Y') AS `Cohort Month`,
+            COUNT(DISTINCT user.id) AS total, 
+            SUM(IF(mnth = MONTH(user.created), 1, 0)) AS active0month,
+            SUM(IF(mnth = MONTH(user.created)+1, 1, 0)) AS active1month,
+            SUM(IF(mnth = MONTH(user.created)+2, 1, 0)) AS active2month,
+            SUM(IF(mnth = MONTH(user.created)+3, 1, 0)) AS active3month,
+            SUM(IF(mnth = MONTH(user.created)+4, 1, 0)) AS active4month,
+            SUM(IF(mnth = MONTH(user.created)+5, 1, 0)) AS active5month,
+            SUM(IF(mnth = MONTH(user.created)+6, 1, 0)) AS active6month,
+            SUM(IF(mnth = MONTH(user.created)+7, 1, 0)) AS active7month,
+            SUM(IF(mnth = MONTH(user.created)+8, 1, 0)) AS active8month,
+            SUM(IF(mnth = MONTH(user.created)+9, 1, 0)) AS active9month,
+            SUM(IF(mnth = MONTH(user.created)+10, 1, 0)) AS active10month,
+            SUM(IF(mnth = MONTH(user.created)+11, 1, 0)) AS active11month,
+            SUM(IF(mnth = MONTH(user.created)+12, 1, 0)) AS active12month
+            FROM user
+            LEFT JOIN
+            (SELECT DISTINCT recruiting_token.user_id,
+            MONTH(web_request.created) as mnth,
+            YEAR(web_request.created) as yr
+            FROM web_request, recruiting_token
+            WHERE web_request.user_id IS NULL
+            AND web_request.uri LIKE CONCAT('/token/recruiting/',recruiting_token.long_id,'%')
+            AND remote_ip NOT IN (SELECT remote_ip FROM web_request WHERE user_id IS NOT NULL)) as t1
+            ON t1.user_id = user.id
+            WHERE user.created >= '2016-01-01'
+            AND user.organization_id != 1
+            GROUP BY YEAR(user.created), MONTH(user.created)
+            ORDER BY YEAR(user.created), MONTH(user.created)"
+        )->fetch_all(MYSQLI_ASSOC);
+    }
 }
