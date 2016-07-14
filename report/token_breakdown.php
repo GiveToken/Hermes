@@ -7,7 +7,7 @@ if (!logged_in()) {
 
 // what are we breaking down by
 $breakdown = strtolower($_GET['by'] ?? 'source');
-if (!in_array($breakdown, ['source', 'os', 'browser'])) {
+if (!in_array($breakdown, ['source', 'os', 'browser', 'organization'])) {
     $breakdown = 'source';
 }
 
@@ -17,16 +17,24 @@ if (!in_array($percent, ['yes', 'no'])) {
     $percent = 'no';
 }
 
+// monthly or weekly?
+$period = strtolower($_GET['period'] ?? '');
+if (!in_array($period, ['weekly', 'monthly'])) {
+    $period = 'weekly';
+}
+
+$report = new Report();
+
 switch ($breakdown) {
     case 'source':
-        $dates = (new Report())->tokenSource();
+        $dates = $report->tokenSource($period);
         $twitter = '';
         $facebook = '';
         $linkedin = '';
         $other = '';
         break;
     case 'os':
-        $dates = (new Report())->tokenOS();
+        $dates = $report->tokenOS($period);
         $osx = '';
         $ipad = '';
         $iphone = '';
@@ -34,18 +42,30 @@ switch ($breakdown) {
         $windows = '';
         break;
     case 'browser':
-        $dates = (new Report())->tokenBrowser();
+        $dates = $report->tokenBrowser($period);
         $chrome = '';
         $firefox = '';
         $ie = '';
         $safari = '';
         $edge = '';
         break;
+    case 'organization':
+        $dates = $report->tokenOrganization($period);
+        $companies = array();
+        //initialize all companies with token views
+        foreach ($dates as $date) {
+            foreach ($date as $ndx => $val) {
+                if (!in_array($ndx, ['Month','Week Starting', 'total'])) {
+                    $companies[$ndx] = '';
+                }
+            }
+        }
+        break;
 }
 array_pop($dates);
 $labels = '';
 foreach ($dates as $date) {
-    $labels .= "'".$date['Week Starting']."',";
+    $labels .= "'".($date['Week Starting'] ?? $date['Month'])."',";
     switch ($breakdown) {
         case 'source':
             $twitter .= ('no' == $percent ? $date['Twitter'] : round(100*$date['Twitter']/$date['total'],2)).',';
@@ -67,31 +87,42 @@ foreach ($dates as $date) {
             $safari .= ('no' == $percent ? $date['safari'] : round(100*$date['safari']/$date['total'],2)).',';
             $edge .= ('no' == $percent ? $date['edge'] : round(100*$date['edge']/$date['total'],2)).',';
             break;
+        case 'organization':
+            foreach ($companies as $company => &$data) {
+                $data .= ('no' == $percent ? ($date[$company] ?? '0') : round(100*($date[$company] ?? 0)/$date['total'],2)).',';
+            }
+            break;
     }
 }
+//echo '<pre>';print_r($companies);die;
 $dataObj = '{';
 $dataObj .= "labels:[$labels],";
 $dataObj .= "datasets:[";
 switch ($breakdown) {
     case 'source':
-        $dataObj .= "{label:'Twitter',data:[$twitter],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
-        $dataObj .= "{label:'Facebook',data:[$facebook],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
-        $dataObj .= "{label:'LinkedIn',data:[$linkedin],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
-        $dataObj .= "{label:'Other',data:[$other],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
+        $dataObj .= "{label:'Twitter',data:[$twitter],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Facebook',data:[$facebook],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'LinkedIn',data:[$linkedin],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Other',data:[$other],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
         break;
     case 'os':
-        $dataObj .= "{label:'OS X',data:[$osx],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
-        $dataObj .= "{label:'iPad',data:[$ipad],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
-        $dataObj .= "{label:'iPhone',data:[$iphone],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
-        $dataObj .= "{label:'Android',data:[$android],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
-        $dataObj .= "{label:'Windows',data:[$windows],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(100,100,100,100)',pointRadius:0},";
+        $dataObj .= "{label:'OS X',data:[$osx],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'iPad',data:[$ipad],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'iPhone',data:[$iphone],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Android',data:[$android],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Windows',data:[$windows],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
         break;
     case 'browser':
-        $dataObj .= "{label:'Chrome',data:[$chrome],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
-        $dataObj .= "{label:'Firefox',data:[$firefox],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,206,86,1)',pointRadius:0},";
-        $dataObj .= "{label:'Internet Explorer',data:[$ie],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,99,132,1)',pointRadius:0},";
-        $dataObj .= "{label:'Safari',data:[$safari],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(255,1,86,200)',pointRadius:0},";
-        $dataObj .= "{label:'Edge',data:[$edge],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(100,100,100,100)',pointRadius:0},";
+        $dataObj .= "{label:'Chrome',data:[$chrome],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Firefox',data:[$firefox],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Internet Explorer',data:[$ie],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Safari',data:[$safari],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        $dataObj .= "{label:'Edge',data:[$edge],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        break;
+    case 'organization':
+        foreach ($companies as $company => $data) {
+            $dataObj .= "{label:'".str_replace("'", "\'", $company)."',data:[{$data}],backgroundColor:'rgba(0,0,0,0)',borderColor:'".$report->randRGBA()."',pointRadius:0},";
+        }
         break;
 }
 $dataObj .= ']}';
@@ -122,9 +153,13 @@ body {
       <input id="breakdown-source" type="radio" name="breakdown" value="source" <?=($breakdown=='source' ? 'checked' :'')?>> By Source
       <input id="breakdown-os" type="radio" name="breakdown" value="os" <?=($breakdown=='os' ? 'checked' :'')?>> By OS
       <input id="breakdown-browser" type="radio" name="breakdown" value="browser" <?=($breakdown=='browser' ? 'checked' :'')?>> By Browser
+      <input id="breakdown-organization" type="radio" name="breakdown" value="organization" <?=($breakdown=='organization' ? 'checked' :'')?>> By Organization
       <br />
       <input id="percent-no" type="radio" name="percent" value="no" <?=($percent=='no' ? 'checked' :'')?>> By Number
       <input id="percent-yes" type="radio" name="percent" value="yes" <?=($percent=='yes' ? 'checked' :'')?>> By Percent
+      <br />
+      <input id="period-weekly" type="radio" name="period" value="weekly" <?=($period=='weekly' ? 'checked' :'')?>> Weekly
+      <input id="period-monthly" type="radio" name="period" value="monthly" <?=($period=='monthly' ? 'checked' :'')?>> Monthly
       <br />
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
@@ -140,14 +175,18 @@ body {
       type: 'line',
       data: <?=$dataObj?>,
       options: {
+        <?= ($breakdown=='organization' ? 'legend: {display: false},' : '')?>
         responsive: false
       }
   });
   $('input[type=radio][name=breakdown]').change(function() {
-      window.location = '/report/token_breakdown?by='+this.value+'&percent='+$('input[type=radio][name=percent]:checked').val();
+      window.location = '/report/token_breakdown?by='+this.value+'&percent='+$('input[type=radio][name=percent]:checked').val()+'&period='+$('input[type=radio][name=period]:checked').val();
   })
   $('input[type=radio][name=percent]').change(function() {
-      window.location = '/report/token_breakdown?by='+$('input[type=radio][name=breakdown]:checked').val()+'&percent='+this.value;
+      window.location = '/report/token_breakdown?by='+$('input[type=radio][name=breakdown]:checked').val()+'&percent='+this.value+'&period='+$('input[type=radio][name=period]:checked').val();
+  })
+  $('input[type=radio][name=period]').change(function() {
+      window.location = '/report/token_breakdown?by='+$('input[type=radio][name=breakdown]:checked').val()+'&percent='+$('input[type=radio][name=percent]:checked').val()+'&period='+this.value;
   })
   </script>
 </body>

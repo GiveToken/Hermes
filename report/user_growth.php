@@ -5,12 +5,17 @@ if (!logged_in()) {
     header('Location: '.'/');
 }
 
-$dates = (new Report())->userGrowth();
+$period = strtolower($_GET['period'] ?? '');
+if (!in_array($period, ['weekly', 'monthly'])) {
+    $period = 'weekly';
+}
+
+$dates = (new Report())->userGrowth($period);
 array_pop($dates);
 $labels = '';
 $count = '';
 foreach ($dates as $date) {
-  $labels .= "'".$date['Week Starting']."',";
+  $labels .= "'".($date['Week Starting'] ?? $date['Month'])."',";
   $count .= $date['users'].',';
 }
 $dataObj = '{';
@@ -42,9 +47,12 @@ body {
   <div class="row" id="org-info">
     <div class="col-sm-offset-1 col-sm-10">
       <h1>Active User Growth</h1>
+      <input id="period-weekly" type="radio" name="period" value="weekly" <?=($period=='weekly' ? 'checked' :'')?>> Weekly
+      <input id="period-monthly" type="radio" name="period" value="monthly" <?=($period=='monthly' ? 'checked' :'')?>> Monthly
+      <br />
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
-        * Includes only users active (logged in or with a non-user token view) that week
+        * Includes only non-S!zzle users logged in or with a non-user token view.
       </p>
     </div>
   </div>
@@ -59,6 +67,9 @@ body {
         responsive: false
       }
   });
+  $('input[type=radio][name=period]').change(function() {
+      window.location = '/report/user_growth?period='+this.value;
+  })
   </script>
 </body>
 </html>

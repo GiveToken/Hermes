@@ -5,13 +5,18 @@ if (!logged_in()) {
     header('Location: '.'/');
 }
 
-$dates = (new Report())->usageGrowth();
+$period = strtolower($_GET['period'] ?? '');
+if (!in_array($period, ['weekly', 'monthly'])) {
+    $period = 'weekly';
+}
+
+$dates = (new Report())->usageGrowth($period);
 array_pop($dates);
 $labels = '';
 $tokenViews = '';
 $emailsSent = '';
 foreach ($dates as $date) {
-  $labels .= "'".$date['Week Starting']."',";
+  $labels .= "'".($date['Week Starting'] ?? $date['Month'])."',";
   $tokenViews .= $date['Nonuser Token Views'].',';
   $emailsSent .= $date['Emails Sent'].',';
 }
@@ -45,6 +50,9 @@ body {
   <div class="row" id="org-info">
     <div class="col-sm-offset-1 col-sm-10">
       <h1>Usage Growth</h1>
+      <input id="period-weekly" type="radio" name="period" value="weekly" <?=($period=='weekly' ? 'checked' :'')?>> Weekly
+      <input id="period-monthly" type="radio" name="period" value="monthly" <?=($period=='monthly' ? 'checked' :'')?>> Monthly
+      <br />
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
       </p>
@@ -62,6 +70,9 @@ body {
         responsive: false
       }
   });
+  $('input[type=radio][name=period]').change(function() {
+      window.location = '/report/usage_growth?period='+this.value;
+  })
   </script>
 </body>
 </html>

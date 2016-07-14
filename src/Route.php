@@ -139,8 +139,14 @@ class Route
                     case 'token_breakdown':
                         include __DIR__.'/../report/token_breakdown.php';
                         break;
+                    case 'tokens_created':
+                        include __DIR__.'/../report/tokens_created.php';
+                        break;
                     case 'usage_growth':
                         include __DIR__.'/../report/usage_growth.php';
+                        break;
+                    case 'user_cohorts':
+                        include __DIR__.'/../report/user_cohorts.php';
                         break;
                     case 'user_growth':
                         include __DIR__.'/../report/user_growth.php';

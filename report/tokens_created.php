@@ -10,26 +10,23 @@ if (!in_array($period, ['weekly', 'monthly'])) {
     $period = 'weekly';
 }
 
-$dates = (new Report())->organizationGrowth($period);
+$dates = (new Report())->tokensCreated($period);
 array_pop($dates);
 $labels = '';
 $count = '';
-$paying = '';
 foreach ($dates as $date) {
   $labels .= "'".($date['Week Starting'] ?? $date['Month'])."',";
-  $count .= $date['active_organizations'].',';
-  $paying .= $date['paying'].',';
+  $count .= $date['tokens'].',';
 }
 $dataObj = '{';
 $dataObj .= "labels:[$labels],";
 $dataObj .= "datasets:[";
-$dataObj .= "{label:'Active Organizations',data:[$count],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
-$dataObj .= "{label:'Paying Organizations',data:[$paying],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(250,128,114,1)',pointRadius:0},";
+$dataObj .= "{label:'Tokens',data:[$count],backgroundColor:'rgba(0,0,0,0)',borderColor:'rgba(75,192,192,1)',pointRadius:0},";
 $dataObj .= ']}';
 
 date_default_timezone_set('America/Chicago');
 
-define('TITLE', 'Organization Growth');
+define('TITLE', 'Tokens Created');
 require __DIR__.'/../header.php';
 ?>
 <style>
@@ -49,14 +46,13 @@ body {
   </div>
   <div class="row" id="org-info">
     <div class="col-sm-offset-1 col-sm-10">
-      <h1>Active Organization Growth</h1>
+      <h1>Tokens Created</h1>
       <input id="period-weekly" type="radio" name="period" value="weekly" <?=($period=='weekly' ? 'checked' :'')?>> Weekly
       <input id="period-monthly" type="radio" name="period" value="monthly" <?=($period=='monthly' ? 'checked' :'')?>> Monthly
       <br />
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
-        * Includes only organizations with one or more users active
-        (logged in or with a non-user token view) that week
+        * Includes only tokens owned by non-S!zzle users.
       </p>
     </div>
   </div>
@@ -72,7 +68,7 @@ body {
       }
   });
   $('input[type=radio][name=period]').change(function() {
-      window.location = '/report/org_growth?period='+this.value;
+      window.location = '/report/tokens_created?period='+this.value;
   })
   </script>
 </body>
