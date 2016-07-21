@@ -10,8 +10,18 @@ if (!in_array($period, ['weekly', 'monthly'])) {
     $period = 'weekly';
 }
 
-$dates = (new Report())->organizationGrowth($period);
-array_pop($dates);
+if (isset($_GET['reload']) && 'true' === $_GET['reload']) {
+    unset($_SESSION['report'][$period.'OrganizationGrowth']);
+}
+
+if (isset($_SESSION['report'][$period.'OrganizationGrowth'])) {
+    $dates = $_SESSION['report'][$period.'OrganizationGrowth']['data'];
+} else {
+    $dates = (new Report())->organizationGrowth($period);
+    array_pop($dates);
+    $_SESSION['report'][$period.'OrganizationGrowth']['data'] = $dates;
+    $_SESSION['report'][$period.'OrganizationGrowth']['cached'] = time();
+}
 $labels = '';
 $count = '';
 $paying = '';
@@ -57,6 +67,9 @@ body {
       <p>
         * Includes only organizations with one or more users active
         (logged in or with a non-user token view) that week
+        <br />
+        ** Report has a one week cache duration
+        (<a href="<?=$_SERVER['REQUEST_URI'].(strpos($_SERVER['REQUEST_URI'], '?') ? '&' : '?')?>reload=true">reload</a>).
       </p>
     </div>
   </div>

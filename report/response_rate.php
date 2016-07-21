@@ -9,9 +9,18 @@ $period = strtolower($_GET['period'] ?? '');
 if (!in_array($period, ['weekly', 'monthly'])) {
     $period = 'weekly';
 }
+if (isset($_GET['reload']) && 'true' === $_GET['reload']) {
+    unset($_SESSION['report'][$period.'ResponseRate']);
+}
 
-$rates = (new Report())->responseRate($period);
-array_pop($rates);
+if (isset($_SESSION['report'][$period.'ResponseRate'])) {
+    $rates = $_SESSION['report'][$period.'ResponseRate']['data'];
+} else {
+    $rates = (new Report())->responseRate($period);
+    array_pop($rates);
+    $_SESSION['report'][$period.'ResponseRate']['data'] = $rates;
+    $_SESSION['report'][$period.'ResponseRate']['cached'] = time();
+}
 $labels = '';
 $yes = '';
 $no = '';
@@ -60,6 +69,9 @@ body {
       <p>
         * Not counting views from users, IPs matching an IP a user has used, or bots. Ignoring responses
         to test or user email addresses.
+        <br />
+        ** Report has a one week cache duration
+        (<a href="<?=$_SERVER['REQUEST_URI'].(strpos($_SERVER['REQUEST_URI'], '?') ? '&' : '?')?>reload=true">reload</a>).
       </p>
     </div>
   </div>

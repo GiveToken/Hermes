@@ -35,7 +35,7 @@ if (ENVIRONMENT == 'production') {
         '68.53.5.230',
         '64.134.191.49',
         '216.0.49.162',
-        '23.24.238.222',
+        '23.24.238.222', //Central Ave Office
         '69.138.145.106', //Gary's House
         '68.53.54.92',
         '174.49.55.29', //Clocktower Drive
@@ -131,6 +131,15 @@ new Connection($mysqli);
 
 // start session
 session_start();
+
+// see if any session reports are stale
+if (isset($_SESSION['report']) && is_array($_SESSION['report'])) {
+    foreach ($_SESSION['report'] as $name => $report) {
+        if (!isset($report['cached']) || $report['cached'] < time() - 7*24*60*60) {
+            unset($_SESSION['report'][$name]);
+        }
+    }
+}
 
 // record website hit
 if (isset($_COOKIE, $_COOKIE['visitor'])) {

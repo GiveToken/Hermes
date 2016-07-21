@@ -7,6 +7,10 @@ if (!logged_in()) {
 
 date_default_timezone_set('America/Chicago');
 
+if (isset($_GET['reload']) && 'true' === $_GET['reload']) {
+    unset($_SESSION['report']['organizationsListing']);
+}
+
 define('TITLE', 'S!zzle - All Organizations');
 require __DIR__.'/../header.php';
 ?>
@@ -42,41 +46,46 @@ body {
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT organization.id, `name`,
-                    COALESCE(user.users, 0) AS users,
-                    COALESCE(recruiting_token.tokens, 0) AS tokens,
-                    COALESCE(view.views, 0) AS views,
-                    COALESCE(paying_user, 'none') AS paying_user,
-                    organization.created
-                    FROM organization
-                    LEFT JOIN
-                    (SELECT user.organization_id, COUNT(*) as users
-                     FROM user
-                     GROUP BY user.organization_id
-                    ) as user
-                    ON user.organization_id = organization.id
-                    LEFT JOIN
-                    (SELECT user.organization_id, COUNT(*) as tokens
-                     FROM recruiting_token, user
-                     WHERE recruiting_token.user_id = user.id
-                     GROUP BY user.organization_id
-                    ) AS recruiting_token
-                    ON organization.id = recruiting_token.organization_id
-                    LEFT JOIN
-                    (SELECT user.organization_id, COUNT(*) as views
-                     FROM web_request, recruiting_token, user
-                     WHERE recruiting_token.user_id = user.id
-                     AND web_request.user_id IS NULL
-                     AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id)
-                     GROUP BY user.organization_id
-                    ) as view
-                    ON organization.id = view.organization_id
-                    GROUP BY organization.id
-                    ORDER BY organization.id
-                    ";
-            $results = execute_query($sql);
-            $rows = array();
-            while ($row = $results->fetch_assoc()) { ?>
+            if (isset($_SESSION['report']['organizationsListing'])) {
+                $results = $_SESSION['report']['organizationsListing']['data'];
+            } else {
+                $sql = "SELECT organization.id, `name`,
+                        COALESCE(user.users, 0) AS users,
+                        COALESCE(recruiting_token.tokens, 0) AS tokens,
+                        COALESCE(view.views, 0) AS views,
+                        COALESCE(paying_user, 'none') AS paying_user,
+                        organization.created
+                        FROM organization
+                        LEFT JOIN
+                        (SELECT user.organization_id, COUNT(*) as users
+                         FROM user
+                         GROUP BY user.organization_id
+                        ) as user
+                        ON user.organization_id = organization.id
+                        LEFT JOIN
+                        (SELECT user.organization_id, COUNT(*) as tokens
+                         FROM recruiting_token, user
+                         WHERE recruiting_token.user_id = user.id
+                         GROUP BY user.organization_id
+                        ) AS recruiting_token
+                        ON organization.id = recruiting_token.organization_id
+                        LEFT JOIN
+                        (SELECT user.organization_id, COUNT(*) as views
+                         FROM web_request, recruiting_token, user
+                         WHERE recruiting_token.user_id = user.id
+                         AND web_request.user_id IS NULL
+                         AND web_request.uri LIKE CONCAT('/token/recruiting/', recruiting_token.long_id)
+                         GROUP BY user.organization_id
+                        ) as view
+                        ON organization.id = view.organization_id
+                        GROUP BY organization.id
+                        ORDER BY organization.id
+                        ";
+                $results = execute_query($sql)->fetch_all(MYSQLI_ASSOC);
+                $_SESSION['report']['organizationsListing']['data'] = $results;
+                $_SESSION['report']['organizationsListing']['cached'] = time();
+            }
+            foreach ($results as $row) { ?>
                 <tr>
                   <td><?php echo date('m/d/Y g:i a', strtotime($row['created']));?></td>
                   <td><a href="/organization/<?php echo $row['id'];?>"><?php echo $row['name'];?></a></td>
@@ -94,6 +103,7 @@ body {
             <?php }?>
         </tbody>
       </table>
+      * Report has a one week cache duration (<a href="<?=$_SERVER['REQUEST_URI']?>?reload=true">reload</a>).
     </div>
   </div>
     <?php require __DIR__.'/../footer.php';?>
