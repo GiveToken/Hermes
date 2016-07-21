@@ -7,6 +7,10 @@ if (!logged_in()) {
 
 date_default_timezone_set('America/Chicago');
 
+if (isset($_GET['reload']) && 'true' === $_GET['reload']) {
+    unset($_SESSION['report']['inactiveOrganizations']);
+}
+
 define('TITLE', 'Inactive Organizations');
 require __DIR__.'/../header.php';
 ?>
@@ -40,7 +44,13 @@ body {
         </thead>
         <tbody>
             <?php
-            $orgs = (new Report())->inactiveOrganizations();
+            if (isset($_SESSION['report']['inactiveOrganizations'])) {
+                $results = $_SESSION['report']['inactiveOrganizations']['data'];
+            } else {
+                $orgs = (new Report())->inactiveOrganizations();
+                $_SESSION['report']['inactiveOrganizations']['data'] = $orgs;
+                $_SESSION['report']['inactiveOrganizations']['cached'] = time();
+            }
             foreach ($orgs as $row) { ?>
                 <tr>
                   <td>
@@ -67,6 +77,8 @@ body {
       </table>
       * Inactive means no logged in activity or non-user token views.
       Only paying organizations and organizations in their free month are included.
+      <br />
+      ** Report has a one week cache duration (<a href="<?=$_SERVER['REQUEST_URI']?>?reload=true">reload</a>).
     </div>
   </div>
   <?php require __DIR__.'/../footer.php';?>

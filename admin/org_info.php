@@ -15,9 +15,18 @@ $endpoint_parts = explode('/', $_SERVER['REQUEST_URI']);
 if (isset($endpoint_parts[2]) && (int) $endpoint_parts[2] > 0) {
     $org_id = (int) $endpoint_parts[2];
     $org = new Organization($org_id);
+    $org_id = $org->id ?? 0;
 } else {
     $org_id = 0;
 }
+
+// Get unmatched User list to choose from
+$users = execute_query(
+    "SELECT user.id, user.first_name, user.last_name, user.email_address
+     FROM user
+     WHERE organization_id IS NULL
+     ORDER BY user.last_name, user.first_name, user.email_address"
+)->fetch_all(MYSQLI_ASSOC);
 
 define('TITLE', 'S!zzle - Organization Info');
 require __DIR__.'/../header.php';
@@ -41,6 +50,34 @@ body {
   <div>
     <?php require __DIR__.'/../navbar.php';?>
   </div>
+  <?php if (count($users) > 0) { ?>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Choose User</h4>
+        </div>
+        <div class="modal-body">
+          <select class="form-control" name="user_id" id="user-id" required>
+            <option id="please-select">Please select a user</option>
+            <?php foreach ($users as $user) {
+                echo "<option value=\"{$user['id']}\">";
+                echo "{$user['first_name']} {$user['last_name']}";
+                echo " ({$user['email_address']})";
+                echo "</option>";
+            }?>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="save-user">Add User</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php }?>
   <div class="row" id="org-info">
     <div class="col-sm-offset-1 col-sm-10">
         <?php if (0 !== $org_id) { ?>
@@ -99,11 +136,31 @@ body {
         }
         ?>
         <br />
+        <?php if (count($users) > 0) { ?>
+        <button class="btn" id="add-user-button" data-toggle="modal" data-target="#myModal">Add</button>
+        <?php }?>
         <?php } else { ?>
-        <h2>Invalid user</h2>
+        <h2>Invalid organization</h2>
         <?php }?>
     </div>
   </div>
-    <?php require __DIR__.'/../footer.php';?>
+  <?php require __DIR__.'/../footer.php';?>
+  <script>
+  $(document).ready(function() {
+      $('#save-user').click(function(event){
+        event.preventDefault();
+        $.post(
+          '/ajax/user/add_organization',
+          {
+            'user': $('#user-id').val(),
+            'organization': '<?=$org_id?>'
+          },
+          function(){
+            window.location.href = '<?=$_SERVER['REQUEST_URI']?>'
+          }
+        )
+      })
+  });
+  </script>
 </body>
 </html>

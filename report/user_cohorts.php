@@ -5,10 +5,20 @@ if (!logged_in()) {
     header('Location: '.'/');
 }
 
+if (isset($_GET['reload']) && 'true' === $_GET['reload']) {
+    unset($_SESSION['report']['userCohorts']);
+}
+
 $report = new Report();
-$dates = $report->userCohorts();
-//echo '<pre>';print_r($dates);die;
-array_pop($dates);
+if (isset($_SESSION['report']['userCohorts'])) {
+    $dates = $_SESSION['report']['userCohorts']['data'];
+} else {
+    $dates = $report->userCohorts();
+    array_pop($dates);
+    $_SESSION['report']['userCohorts']['data'] = $dates;
+    $_SESSION['report']['userCohorts']['cached'] = time();
+}
+
 $labels = "'0','1','2','3','4','5','6','7','8','9','10','11','12',";
 $rowData = array();
 foreach ($dates as $date) {
@@ -65,6 +75,9 @@ body {
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
         * Includes only non-S!zzle users.
+        <br />
+        ** Report has a one week cache duration
+        (<a href="<?=$_SERVER['REQUEST_URI'].(strpos($_SERVER['REQUEST_URI'], '?') ? '&' : '?')?>reload=true">reload</a>).
       </p>
     </div>
   </div>

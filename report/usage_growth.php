@@ -10,8 +10,18 @@ if (!in_array($period, ['weekly', 'monthly'])) {
     $period = 'weekly';
 }
 
-$dates = (new Report())->usageGrowth($period);
-array_pop($dates);
+if (isset($_GET['reload']) && 'true' === $_GET['reload']) {
+    unset($_SESSION['report'][$period.'UsageGrowth']);
+}
+
+if (isset($_SESSION['report'][$period.'UsageGrowth'])) {
+    $dates = $_SESSION['report'][$period.'UsageGrowth']['data'];
+} else {
+    $dates = (new Report())->usageGrowth($period);
+    array_pop($dates);
+    $_SESSION['report'][$period.'UsageGrowth']['data'] = $dates;
+    $_SESSION['report'][$period.'UsageGrowth']['cached'] = time();
+}
 $labels = '';
 $tokenViews = '';
 $emailsSent = '';
@@ -59,6 +69,9 @@ body {
     </div>
   </div>
   * View count excludes logged in users and <a href="/bot_list">bots</a>.
+  <br />
+  ** Report has a one week cache duration
+  (<a href="<?=$_SERVER['REQUEST_URI'].(strpos($_SERVER['REQUEST_URI'], '?') ? '&' : '?')?>reload=true">reload</a>).
   <?php require __DIR__.'/../footer.php';?>
   <script src="/js/Chart.min.js"></script>
   <script>

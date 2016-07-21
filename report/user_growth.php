@@ -10,8 +10,19 @@ if (!in_array($period, ['weekly', 'monthly'])) {
     $period = 'weekly';
 }
 
-$dates = (new Report())->userGrowth($period);
-array_pop($dates);
+if (isset($_GET['reload']) && 'true' === $_GET['reload']) {
+    unset($_SESSION['report'][$period.'UserGrowth']);
+}
+
+if (isset($_SESSION['report'][$period.'UserGrowth'])) {
+    $dates = $_SESSION['report'][$period.'UserGrowth']['data'];
+} else {
+    $dates = (new Report())->userGrowth($period);
+    array_pop($dates);
+    $_SESSION['report'][$period.'UserGrowth']['data'] = $dates;
+    $_SESSION['report'][$period.'UserGrowth']['cached'] = time();
+}
+
 $labels = '';
 $count = '';
 foreach ($dates as $date) {
@@ -53,6 +64,9 @@ body {
       <canvas id="myChart" width="1000" height="400"></canvas>
       <p>
         * Includes only non-S!zzle users logged in or with a non-user token view.
+        <br />
+        ** Report has a one week cache duration
+        (<a href="<?=$_SERVER['REQUEST_URI'].(strpos($_SERVER['REQUEST_URI'], '?') ? '&' : '?')?>reload=true">reload</a>).
       </p>
     </div>
   </div>
