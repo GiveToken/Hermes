@@ -350,7 +350,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
                 AND organization.id != 1
             ) AS monthly on weekly.id = monthly.id
             ORDER BY inactive"
-        );//->fetch_all(MYSQLI_ASSOC);
+        )->fetch_all(MYSQLI_ASSOC);
     }
 
     /**
@@ -593,7 +593,7 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
     public function userCohorts()
     {
         return $this->execute_query("SELECT DATE_FORMAT(user.created, '%M %Y') AS `Cohort Month`,
-            COUNT(DISTINCT user.id) AS total, 
+            COUNT(DISTINCT user.id) AS total,
             SUM(IF(mnth = MONTH(user.created), 1, 0)) AS active0month,
             SUM(IF(mnth = MONTH(user.created)+1, 1, 0)) AS active1month,
             SUM(IF(mnth = MONTH(user.created)+2, 1, 0)) AS active2month,
