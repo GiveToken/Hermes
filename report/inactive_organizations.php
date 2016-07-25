@@ -45,7 +45,7 @@ body {
         <tbody>
             <?php
             if (isset($_SESSION['report']['inactiveOrganizations'])) {
-                $results = $_SESSION['report']['inactiveOrganizations']['data'];
+                $orgs = $_SESSION['report']['inactiveOrganizations']['data'];
             } else {
                 $orgs = (new Report())->inactiveOrganizations();
                 $_SESSION['report']['inactiveOrganizations']['data'] = $orgs;
