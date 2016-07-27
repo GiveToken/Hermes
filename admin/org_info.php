@@ -105,6 +105,13 @@ body {
         if ($row = $result->fetch_assoc()) {
             echo $row['users'] . ' users created<br />';
         }
+        $query = "SELECT count(*) companies
+                  FROM recruiting_company
+                  WHERE organization_id = '$org_id'";
+        $result = execute_query($query);
+        if ($row = $result->fetch_assoc()) {
+            echo $row['companies'] . ' companies created<br />';
+        }
         $query = "SELECT count(*) tokens
                   FROM recruiting_token, user
                   WHERE recruiting_token.user_id = user.id
