@@ -23,7 +23,7 @@ if (logged_in() && isset($_POST['token_id'], $_POST['old_user_id'], $_POST['new_
                 if ($RecruitingCompany->organization_id != $user->organization_id
                 && 1 != $RecruitingCompany->organization_id
                 ) {
-                    $data['error'] = "This company ({$RecruitingCompany->name}) belongs to a diffferent organization.";
+                    $data['error'] = "This company ({$RecruitingCompany->name}) belongs to a different organization.";
                 } elseif (1 == $RecruitingCompany->organization_id) {
                     $RecruitingCompany->organization_id = $user->organization_id;
                     $RecruitingCompany->save();
