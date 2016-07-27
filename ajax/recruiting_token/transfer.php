@@ -14,13 +14,14 @@ if (logged_in() && isset($_POST['token_id'], $_POST['old_user_id'], $_POST['new_
         // get recruiting token
         $RecruitingToken = new RecruitingToken($long_id, 'long_id');
         if (isset($RecruitingToken->user_id) && $RecruitingToken->user_id == $old_user_id) {
-            // get company and check that it belongs to new user's org or this is admin user
+            // get company and check that it belongs to new user's org
             $RecruitingCompany = new RecruitingCompany($RecruitingToken->recruiting_company_id);
             if (isset($RecruitingCompany->organization_id)) {
                 $user = new User($new_user_id);
-                if ($RecruitingCompany->organization_id != $user->organization_id && !is_admin()) {
+                //If it's not a Sizzle company, error out.
+                if ($RecruitingCompany->organization_id != $user->organization_id && 1 != $RecruitingCompany->organization_id) {
                     $data['error'] = "This company ({$RecruitingCompany->name}) belongs to a diffferent organization."
-                } elseif (is_admin()) {
+                } elseif (1 == $RecruitingCompany->organization_id) {
                     $RecruitingCompany->organization_id = $user->organization_id;
                     $RecruitingCompany->save();
                 }
