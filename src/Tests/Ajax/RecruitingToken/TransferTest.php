@@ -77,7 +77,7 @@ extends \PHPUnit_Framework_TestCase
         $User2 = $this->createUser();
 
         // setup test company with unrelated user
-        $RecruitingCompany = $this->createRecruitingCompany($User1->id);
+        $RecruitingCompany = $this->createRecruitingCompany();
 
         // setup test tokens
         $this->createRecruitingToken($User1->id, $RecruitingCompany->id);
