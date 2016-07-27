@@ -1,7 +1,8 @@
 <?php
 use \Sizzle\Bacon\Database\{
     RecruitingCompany,
-    RecruitingToken
+    RecruitingToken,
+    User
 };
 
 $success = 'false';
@@ -19,8 +20,10 @@ if (logged_in() && isset($_POST['token_id'], $_POST['old_user_id'], $_POST['new_
             if (isset($RecruitingCompany->organization_id)) {
                 $user = new User($new_user_id);
                 //If it's not a Sizzle company, error out.
-                if ($RecruitingCompany->organization_id != $user->organization_id && 1 != $RecruitingCompany->organization_id) {
-                    $data['error'] = "This company ({$RecruitingCompany->name}) belongs to a diffferent organization."
+                if ($RecruitingCompany->organization_id != $user->organization_id
+                && 1 != $RecruitingCompany->organization_id
+                ) {
+                    $data['error'] = "This company ({$RecruitingCompany->name}) belongs to a diffferent organization.";
                 } elseif (1 == $RecruitingCompany->organization_id) {
                     $RecruitingCompany->organization_id = $user->organization_id;
                     $RecruitingCompany->save();
