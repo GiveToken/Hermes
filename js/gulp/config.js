@@ -58,7 +58,6 @@ module.exports = {
             p.vendor_js('react.min'),
             p.vendor_js('JSXTransformer'),
             p.js('create_common'),
-            p.js('create_recruiting'),
             p.js('free-trial.min'),
             p.js('contact'),
             p.js('login'),
@@ -70,7 +69,6 @@ module.exports = {
         ],
 
         css: [
-            p.css('create_recruiting'),
             p.css('datatables'),
             p.css('at-at'),
             p.css('ball-robot')

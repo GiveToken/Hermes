@@ -9,8 +9,10 @@ namespace Sizzle\Tests\Ajax\User;
 class GetRecruiterProfileTest
 extends \PHPUnit_Framework_TestCase
 {
-    use \Sizzle\Bacon\Tests\Traits\Organization;
-    use \Sizzle\Bacon\Tests\Traits\RecruitingToken;
+    use \Sizzle\Bacon\Tests\Traits\Organization, \Sizzle\Bacon\Tests\Traits\RecruitingToken {
+        \Sizzle\Bacon\Tests\Traits\Organization::createOrganization insteadof \Sizzle\Bacon\Tests\Traits\RecruitingToken;
+        \Sizzle\Bacon\Tests\Traits\Organization::deleteOrganizations insteadof \Sizzle\Bacon\Tests\Traits\RecruitingToken;
+    }
 
     /**
      * Requires the util.php file of functions

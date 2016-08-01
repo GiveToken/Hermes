@@ -77,7 +77,7 @@ extends \PHPUnit_Framework_TestCase
         $User2 = $this->createUser();
 
         // setup test company with unrelated user
-        $RecruitingCompany = $this->createRecruitingCompany($User1->id);
+        $RecruitingCompany = $this->createRecruitingCompany();
 
         // setup test tokens
         $this->createRecruitingToken($User1->id, $RecruitingCompany->id);
@@ -107,7 +107,7 @@ extends \PHPUnit_Framework_TestCase
         ob_end_clean();
         $return = json_decode($json);
         $this->assertEquals('false', $return->success);
-        $this->assertEquals('Company already assigned to a different user', $return->data->error);
+        $this->assertEquals("This company ({$RecruitingCompany->name}) belongs to a different organization.", $return->data->error);
 
         //check DB was not updated
         $RecruitingToken2 = new RecruitingToken($RecruitingToken->long_id, 'long_id');
@@ -122,9 +122,12 @@ extends \PHPUnit_Framework_TestCase
         // setup test users
         $User1 = $this->createUser();
         $User2 = $this->createUser();
+        $org2 = $this->createOrganization();
+        $User2->organization_id = $org2->id;
+        $User2->save();
 
         // setup test company
-        $RecruitingCompany = $this->createRecruitingCompany($User2->id);
+        $RecruitingCompany = $this->createRecruitingCompany($User2->organization_id);
 
         // setup test token
         $RecruitingToken = $this->createRecruitingToken($User1->id, $RecruitingCompany->id);
