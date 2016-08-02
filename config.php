@@ -39,7 +39,8 @@ if (ENVIRONMENT == 'production') {
         '69.138.145.106', //Gary's House
         '68.53.54.92',
         '174.49.55.29', //Clocktower Drive
-        '68.53.147.233' //Robbie's
+        '68.53.147.233', //Robbie's
+        '172.12.62.168' // Suzanne's
     ];
     if (!in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
         header('Location: https://www.gosizzle.io');
