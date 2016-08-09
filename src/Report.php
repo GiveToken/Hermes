@@ -18,18 +18,19 @@ class Report extends \Sizzle\Bacon\DatabaseEntity
         if ('monthly' == $type) {
             $query = "SELECT t4.*, t5.paying FROM
                 (SELECT yr, mnth,
-                DATE_FORMAT(created, '%Y %M') AS `Month`,
+                DATE_FORMAT(t3.created, '%Y %M') AS `Month`,
                 COUNT(DISTINCT organization_id) as active_organizations
                 FROM user,
                 (
-                (SELECT user_id, YEAR(created) as yr, MONTH(created) as mnth
+                (SELECT user_id, YEAR(created) as yr, MONTH(created) as mnth, web_request.created
                 FROM web_request
                 WHERE user_id NOT IN (SELECT id from user WHERE internal = 'Y')
                 GROUP BY YEAR(created), MONTH(created), user_id)
                 UNION
                 (SELECT recruiting_token.user_id,
                 YEAR(web_request.created) as yr,
-                MONTH(web_request.created) as mnth
+                MONTH(web_request.created) as mnth,
+                web_request.created
                 FROM web_request, recruiting_token
                 WHERE web_request.user_id IS NULL
                 AND recruiting_token.user_id NOT IN (SELECT id from user WHERE internal = 'Y')
