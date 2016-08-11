@@ -30,7 +30,7 @@ if (!defined('ENVIRONMENT')) {
 }
 
 // check IP whitelist
-if (ENVIRONMENT == 'production') {
+/*if (ENVIRONMENT == 'production') {
     $whitelist = [
         '68.53.5.230',
         '64.134.191.49',
@@ -40,12 +40,13 @@ if (ENVIRONMENT == 'production') {
         '68.53.54.92',
         '174.49.55.29', //Clocktower Drive
         '68.53.147.233', //Robbie's
-        '172.12.62.168' // Suzanne's
+        '172.12.62.168', // Suzanne's
+        '98.87.154.138' // Vitor
     ];
     if (!in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
         header('Location: https://www.gosizzle.io');
     }
-}
+}*/
 
 // setup Monolog error handler to report to Slack
 // this causes a 500 error on AWS (is PHP 7 issue?)
