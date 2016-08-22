@@ -5,6 +5,13 @@ if (!logged_in()) {
     header('Location: '.'/');
 }
 
+// Get org list to choose from
+$orgs = execute_query(
+    "SELECT organization.id, organization.name
+     FROM organization
+     ORDER BY organization.name"
+)->fetch_all(MYSQLI_ASSOC);
+
 define('TITLE', 'S!zzle - Create Account');
 require __DIR__.'/../header.php';
 ?>
@@ -34,6 +41,25 @@ body {
           <div class="form-group">
             <input type="text" class="form-control" id="token_id" name="token_id" placeholder="Token ID" required>
           </div>
+          <div class="form-group">
+            <select id="org-selector" class="form-control" name="organization_id" required>
+              <option id="please-select">Please select an organization</option>
+              <option id="create-new-organization" value="new"><i>Create New</i></option>
+              <?php foreach ($orgs as $org) {
+                  echo "<option value=\"{$org['id']}\">";
+                  echo "{$org['name']}";
+                  echo "</option>";
+              }?>
+            </select>
+          </div>
+          <div id="extra-fields" style="display:none;">
+            <div class="form-group">
+              <input type="text" class="form-control" id="org_name" name="org_name" placeholder="Organization Name">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="org_web" name="org_web" placeholder="Organization Website">
+            </div>
+          </div>
         </div>
         <button type="submit" class="btn btn-success" id="submit-create-account">
           Create Account
@@ -60,6 +86,15 @@ body {
           $('#error-message').html(message);
         }
       });
+    });
+
+    // when creating new org
+    $('#org-selector').change(function(){
+      if ($('#org-selector').val() == 'new') {
+        $('#extra-fields').css('display', 'block');
+      } else {
+        $('#extra-fields').css('display', 'none');
+      }
     });
   });
   </script>
