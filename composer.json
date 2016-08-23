@@ -11,7 +11,9 @@
         "gosizzle/sizzle-php-sdk": "0.*",
         "mandrill/mandrill": "^1.0",
         "devio/pipedrive": "^0.3.0",
-        "aws/aws-sdk-php": "^3.15"
+        "aws/aws-sdk-php": "^3.15",
+        "knplabs/github-api": "^1.7",
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "5.1.*",

@@ -108,6 +108,9 @@ class Route
             case 'iframe_code':
                 include __DIR__.'/../iframe_code.php';
                 break;
+            case 'issues':
+                include __DIR__.'/../issues.php';
+                break;
             case 'js':
                 if (!isset($this->endpointPieces[2]) || '' == $this->endpointPieces[2]) {
                     include $this->default;
