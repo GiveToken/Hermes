@@ -160,6 +160,12 @@ class Route
                     }
                 }
                 break;
+            case 'stories':
+                include __DIR__.'/../stories.php';
+                break;
+            case 'story':
+                include __DIR__.'/../story.php';
+                break;
             case 'teapot':
                 include __DIR__.'/../teapot.php';
                 break;

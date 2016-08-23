@@ -20,6 +20,10 @@ require __DIR__.'/../header.php';
         </li>
         <br/>
         <li>
+          Candidates:
+          <a href="/stories">Token Stories</a>
+        </li>
+        <li>
           Cities:
           <a href="/admin/city">Edit</a>
         </li>
